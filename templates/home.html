@@ -1,0 +1,25 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<br><br><br><br>
+
+<p>Revenue Yesterday: DKK {{ dayRevenue }}</p>
+
+<table width="100">
+	<tr>
+		<td>-</td>
+		<td>This month</td>
+		<td>Last month</td>
+	</tr>
+	<tr>
+		<td>Month to date:</td>
+		<td>{{ monthToDate }} kr.</td>
+		<td>{{ previousMonthToDate }} kr.</td>
+	</tr>
+	<tr>
+		<td>Last 30 days:</td>
+		<td>{{ lastThirtyDays }} kr.</td>
+		<td>{{ previousLastThirtyDays }} kr.</td>
+	</tr>
+</table>
+{% endblock content %}
