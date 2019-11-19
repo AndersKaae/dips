@@ -1,14 +1,16 @@
 import pymysql
+import sqlite3
 from decimal import Decimal
 from datetime import datetime, timedelta
 
 class Database:
     def __init__(self):
-        host = "127.0.0.1"
-        user = "root"
-        password = "miro12sd"
-        db = "dips1"
-        self.con = pymysql.connect(host=host, user=user, password=password, db=db, cursorclass=pymysql.cursors.DictCursor)
+        #host = "127.0.0.1"
+        #user = "root"
+        #password = "SOMETHING"
+        #db = "dips1"
+        #self.con = pymysql.connect(host=host, user=user, password=password, db=db, cursorclass=pymysql.cursors.DictCursor)
+        self.con = sqlite3.connect('dips1.db')
         self.cur = self.con.cursor()
 
     def ListPayments(self):
@@ -23,17 +25,13 @@ class Database:
             self.cur.execute('SELECT orderNo, amount, fullfillTime FROM bigmoney ORDER BY fullfillTime DESC')
             total = self.cur.fetchall()
             for item in total:
-                #print(relevant)
-                #print(item['fullfillTime'])
-                if str(item['fullfillTime']) == str(fromDate):
+                if str(item[2]) == str(fromDate):
                     relevant = True
-                    #print(relevant)
-                if str(item['fullfillTime']) == str(toDate):
+                if str(item[2]) == str(toDate):
                     relevant = False
-                    #print(relevant)
                     break
                 if relevant == True:
-                    sum = sum + Decimal(item['amount'])
+                    sum = sum + Decimal(item[1])
             return sum
 
 def PreviousMonthToDate():

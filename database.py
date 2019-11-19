@@ -2,7 +2,8 @@ from sqlalchemy import create_engine, ForeignKey, Column, Integer, String, Unico
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
-engine = create_engine('mysql+pymysql://root:miro12sd@localhost/dips1', echo = False)
+#engine = create_engine('mysql+pymysql://[user]:[pass]@localhost/dips1', echo = False)
+engine = create_engine('sqlite:///dips1.db')
 
 Base = declarative_base()
 

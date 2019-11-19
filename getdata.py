@@ -46,11 +46,10 @@ def ReformatDate(date):
     newDate = newDate[2][0] + '-' + newDate[1] + '-' + newDate[0]
     return newDate
 
-# Getting file from FTP
-filename = ConnectFTP()
-
 manualMode = True
 if manualMode == False:
+    # Getting file from FTP
+    filename = ConnectFTP()
     # Creating an array from file
     print('Parsing data from FTP')
     linesInFile = ReadFile(filename)

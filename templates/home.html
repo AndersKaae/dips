@@ -3,23 +3,26 @@
 
 <br><br><br><br>
 
-<p>Revenue Yesterday: DKK {{ dayRevenue }}</p>
+<p>Revenue Yesterday: {{ "{:,.2f}".format(dayRevenue) }} kr.</p>
 
 <table width="100">
 	<tr>
-		<td>-</td>
-		<td>This month</td>
-		<td>Last month</td>
+		<th></th>
+		<th>This month</th>
+		<th>Change</th>
+		<th>Last month</th>
 	</tr>
 	<tr>
 		<td>Month to date:</td>
-		<td>{{ monthToDate }} kr.</td>
-		<td>{{ previousMonthToDate }} kr.</td>
+		<td>{{ "{:,.2f}".format(monthToDate) }} kr.</td>
+		<td>{{ (((monthToDate - previousMonthToDate) / previousMonthToDate)*100)|round(2) }} %</td>
+		<td>{{ "{:,.2f}".format(previousMonthToDate) }} kr.</td>
 	</tr>
 	<tr>
 		<td>Last 30 days:</td>
-		<td>{{ lastThirtyDays }} kr.</td>
-		<td>{{ previousLastThirtyDays }} kr.</td>
+		<td>{{ "{:,.2f}".format(lastThirtyDays) }} kr.</td>
+		<td>{{ (((lastThirtyDays - previousLastThirtyDays) / previousLastThirtyDays)*100)|round(2) }} %</td>
+		<td>{{ "{:,.2f}".format(previousLastThirtyDays) }} kr.</td>
 	</tr>
 </table>
 {% endblock content %}
