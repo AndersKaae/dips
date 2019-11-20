@@ -45,15 +45,3 @@ def PreviousMonthToDate():
     db = Database()
     mostRecentDate = db.Period(startdate, enddate)
     return startdate, enddate
-
-mostRecentDate = str(datetime.today() - timedelta(days=1))[:10]
-db = Database()
-dayRevenue = db.Period(mostRecentDate, mostRecentDate)
-dayRevenue = f'{dayRevenue:,}'
-monthToDate = db.Period(mostRecentDate, mostRecentDate[:-2]+'01')
-monthToDate = f'{monthToDate:,}'
-startdate, enddate = PreviousMonthToDate()
-previousMonthToDate = db.Period(startdate, enddate)
-previousMonthToDate = f'{previousMonthToDate:,}'
-lastThirtyDays = db.Period(mostRecentDate, str(datetime.today() - timedelta(days=30))[:10])
-lastThirtyDays = f'{lastThirtyDays:,}'
