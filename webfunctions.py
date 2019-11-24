@@ -2,6 +2,7 @@ import pymysql
 import sqlite3
 from decimal import Decimal
 from datetime import datetime, timedelta
+from urllib.request import urlopen
 
 class Database:
     def __init__(self):
@@ -34,6 +35,20 @@ class Database:
                     sum = sum + Decimal(item[1])
             return sum
 
+def LastXDays(NumberOfDays):
+    db = Database()
+    revenuePerDay = []
+    while NumberOfDays > 0:
+        tempList = []
+        day = str(datetime.today() - timedelta(days=NumberOfDays))[:10]
+        tempList.append(db.Period(day, day))
+        day = datetime.strptime(day, '%Y-%m-%d')
+        day = day.strftime("%A, %d %b %Y")
+        tempList.append(day)
+        revenuePerDay.append(tempList)   
+        NumberOfDays = NumberOfDays - 1
+    return revenuePerDay
+
 def PreviousMonthToDate():
     mostRecentDate = str(datetime.today() - timedelta(days=1))[:10]
     dateAsString = str(mostRecentDate)
@@ -45,3 +60,4 @@ def PreviousMonthToDate():
     db = Database()
     mostRecentDate = db.Period(startdate, enddate)
     return startdate, enddate
+
