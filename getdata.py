@@ -1,10 +1,15 @@
 from database import *
 from ftplib import FTP
+import configparser
+
+# Reading config file
+config = configparser.ConfigParser()
+config.read('config.ini')
 
 def ConnectFTP():
     print('Connecting to FTP...')
-    ftp = FTP('waws-prod-am2-157.ftp.azurewebsites.windows.net')
-    ftp.login(user='x', passwd = 'y')
+    ftp = FTP(config["DEFAULT"]["ServerAdress"])
+    ftp.login(user= config["DEFAULT"]["UserName"], passwd = config["DEFAULT"]["Password"])
     ftp.cwd('data/dibs')
     filelist=[]
     ftp.retrlines('LIST', filelist.append)

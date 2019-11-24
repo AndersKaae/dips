@@ -36,10 +36,10 @@
 <div class="row"> 
 	<form action="/" method="post">
 		<div class="form-group">
-			<label for="exampleInputEmail1">Number of days</label>
-			<input class="form-control" type="text" name="email"></input>
-			<input class="btn btn-primary" type="submit" value="Submit"></input>
+			<label for="exampleInputEmail1">Number of days:</label>
+			<input class="form-control" type="text" name="email" value="{{ lastweek|length }}"></input>
 		</div>
+		<input class="btn btn-primary" type="submit" value="Submit"></input>
 	</form>
 </div>
 
