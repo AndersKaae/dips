@@ -2,8 +2,7 @@ from sqlalchemy import create_engine, ForeignKey, Column, Integer, String, Unico
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
-#engine = create_engine('mysql+pymysql://[user]:[pass]@localhost/dips1', echo = False)
-engine = create_engine('sqlite:///dips1.db')
+engine = create_engine('sqlite:///dips1.db', connect_args={'check_same_thread': False})
 
 Base = declarative_base()
 
@@ -23,6 +22,7 @@ Session = sessionmaker()
 Session.configure(bind=engine)
 session = Session()
 Base.metadata.create_all(engine)
+session.commit()
 
 def insertOrder(orderNo, transactionNo, amount, currency, cardType, authTime, fullfillTime, aquirer):
     isItUnique = session.query(BigMoney).filter_by(orderNo = orderNo).first()

@@ -51,6 +51,17 @@ def ReformatDate(date):
     newDate = newDate[2][0] + '-' + newDate[1] + '-' + newDate[0]
     return newDate
 
+def ReadData(file):
+    linesInFile = ReadFile(file)
+    line = StartingLine(linesInFile)
+    n = 1
+    for item in linesInFile:
+        n += 1
+        if n > line:
+            item = item.split(",")
+            date = ReformatDate(item[6])
+            insertOrder(item[0], item[1], item[2], item[3], item[4], item[5], date, item[7])
+
 manualMode = True
 if manualMode == False:
     # Getting file from FTP

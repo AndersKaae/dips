@@ -1,0 +1,41 @@
+{% extends "layout.html" %}
+{% block content %}
+
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <form action="/upload" method="POST" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label>Select the CSV file</label>
+                        <div class="custom-file">
+                            <input type="file" class="custom-file-input" name="inputField" id="image">
+                            <label class="custom-file-label" for="image">Select file...</label>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Upload</button>
+                </form>
+
+                <script>
+                        $('#image').on('change',function(){
+                            //get the file name
+                            var fileName = $(this).val();
+                            fileName = fileName.substring(fileName.lastIndexOf("\\") + 1, fileName.length);
+                            //replace the "Choose a file" label
+                            $(this).next('.custom-file-label').html(fileName);
+                        })
+                </script>
+            </div>
+        </div>
+
+        <div class="flashes">
+                <br>
+                {% for message in get_flashed_messages() %}
+                    <p class="text-danger">{{ message }}</p>
+                {% endfor %}
+        </div>
+    
+    </div>
+
+    
+
+{% endblock content %} 

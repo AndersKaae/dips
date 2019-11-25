@@ -61,3 +61,16 @@ def PreviousMonthToDate():
     mostRecentDate = db.Period(startdate, enddate)
     return startdate, enddate
 
+def allowedFiles(filename):
+    allowed = True
+    if not "." in filename:
+        allowed =  False
+        return allowed
+    ext = filename.rsplit(".", 1)[1]    
+    if ext.upper() != "TXT":
+        allowed =  False
+    return allowed
+
+def fileValid(filename):
+    valid = True
+    return valid

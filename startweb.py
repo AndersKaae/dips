@@ -1,7 +1,10 @@
-from flask import Flask, render_template, redirect, request
+from flask import Flask, render_template, redirect, request, Markup, flash, url_for
 from webfunctions import *
+from getdata import *
+import os
 
 app = Flask(__name__)
+app.secret_key = "d4bb81b1-2038-4f56-8bec-9e35472c4826"
 
 mostRecentDate = str(datetime.today() - timedelta(days=1))[:10]
 
@@ -9,7 +12,7 @@ mostRecentDate = str(datetime.today() - timedelta(days=1))[:10]
 def home():
 	formdata = ""
 	try:
-		formdata = request.form['email']
+		formdata = request.form['days']
 	except:
 		print('Running first time?')	
 	db = Database()
@@ -27,6 +30,23 @@ def home():
 
 	result = db.ListPayments()
 	return render_template('home.html', posts = result, dayRevenue = dayRevenue, monthToDate = monthToDate, previousMonthToDate = previousMonthToDate, lastThirtyDays = lastThirtyDays, previousLastThirtyDays = previousLastThirtyDays, lastweek= lastweek)
+
+@app.route("/upload", methods=["GET", "POST"])
+def upload_file():
+	message = ''
+	if request.method == "POST":
+		if request.files:
+			csvFile = request.files["inputField"]
+			if allowedFiles(csvFile.filename) == True:
+				csvFile.save(os.path.join(os.path.dirname(__file__), config["DEFAULT"]["TempFilePath"], csvFile.filename))
+				message = Markup("<span>Files saved</span>")
+				ReadData(os.path.join(os.path.dirname(__file__), config["DEFAULT"]["TempFilePath"], csvFile.filename))
+				return redirect(url_for('home'))
+			else:
+				message = Markup("<span>Invalid file type</span>")
+			flash(message)
+			return redirect(request.url)
+	return render_template("upload.html")
 
 if __name__ == '__main__':
 	app.run(debug=True)
