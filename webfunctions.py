@@ -6,11 +6,6 @@ from urllib.request import urlopen
 
 class Database:
     def __init__(self):
-        #host = "127.0.0.1"
-        #user = "root"
-        #password = "SOMETHING"
-        #db = "dips1"
-        #self.con = pymysql.connect(host=host, user=user, password=password, db=db, cursorclass=pymysql.cursors.DictCursor)
         self.con = sqlite3.connect('dips1.db')
         self.cur = self.con.cursor()
 
@@ -36,18 +31,61 @@ class Database:
             return sum
 
 def LastXDays(NumberOfDays):
+    totalDays = NumberOfDays
     db = Database()
     revenuePerDay = []
-    while NumberOfDays > 0:
+    while NumberOfDays >= 0:
         tempList = []
         day = str(datetime.today() - timedelta(days=NumberOfDays))[:10]
         tempList.append(db.Period(day, day))
         day = datetime.strptime(day, '%Y-%m-%d')
         day = day.strftime("%A, %d %b %Y")
         tempList.append(day)
-        revenuePerDay.append(tempList)   
+        # We are including the current day, but only displaying if revenue is > 0
+        if tempList[0] > 0:
+            revenuePerDay.append(tempList)
+        # Since we are unsure of wether to show current day, we remove the oldest day if today is included
+        if len(revenuePerDay) > totalDays:
+            revenuePerDay.remove(revenuePerDay[0])
         NumberOfDays = NumberOfDays - 1
     return revenuePerDay
+
+def LastXMonths(NumberOfMonths):
+    db = Database()
+    monthPairs = []
+    tempMonthPair = []
+    monthMoney = []
+    # Setting up first month which might be a partial month
+    endDate = datetime.today()
+    if db.Period(str(endDate)[:10], str(endDate)[:10]) == 0:
+        endDate = endDate - timedelta(days=1)
+    todaysday = endDate.day
+    startDate = datetime.today() - timedelta(days=todaysday - 1)
+    tempMonthPair.append(str(startDate)[:10])
+    tempMonthPair.append(str(endDate)[:10])
+    monthPairs.append(tempMonthPair)
+    tempMonthPair = []
+    while NumberOfMonths > 1:
+        endDate = startDate - timedelta(days=1)
+        startDate = endDate - timedelta(days=endDate.day - 1)
+        tempMonthPair.append(str(startDate)[:10])
+        tempMonthPair.append(str(endDate)[:10])
+        monthPairs.append(tempMonthPair)
+        tempMonthPair = []
+        NumberOfMonths = NumberOfMonths - 1
+
+    # Passing the month pairs through the periode function
+    db = Database()
+    for item in monthPairs:
+        tempMonthPair = []
+        tempMonthPair.append(datetime.strptime(item[0], '%Y-%m-%d').strftime("%B"))
+        tempMonthPair.append(db.Period(item[1], item[0]))
+        monthMoney.append(tempMonthPair)
+        test = db.Period(item[1], item[0])
+        print(datetime.strptime(item[0], '%Y-%m-%d').strftime("%B"))
+        print(test)
+    print(monthMoney)
+    return monthPairs
 
 def PreviousMonthToDate():
     mostRecentDate = str(datetime.today() - timedelta(days=1))[:10]
@@ -74,3 +112,5 @@ def allowedFiles(filename):
 def fileValid(filename):
     valid = True
     return valid
+
+monthPairs = LastXMonths(10)

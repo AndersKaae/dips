@@ -11,10 +11,9 @@ mostRecentDate = str(datetime.today() - timedelta(days=1))[:10]
 @app.route("/", methods=['GET', 'POST'])
 def home():
 	formdata = ""
-	try:
+	# This is needed to avoid error on first load since the form contains no data
+	if request.method == 'POST': 
 		formdata = request.form['days']
-	except:
-		print('Running first time?')	
 	db = Database()
 	dayRevenue = db.Period(mostRecentDate, mostRecentDate)
 	monthToDate = db.Period(mostRecentDate, mostRecentDate[:-2]+'01')
