@@ -55,15 +55,18 @@ def LastXMonths(NumberOfMonths):
     monthPairs = []
     tempMonthPair = []
     monthMoney = []
+    modifier = -1
     # Setting up first month which might be a partial month
     endDate = datetime.today()
     if db.Period(str(endDate)[:10], str(endDate)[:10]) == 0:
         endDate = endDate - timedelta(days=1)
+        modifier = 0
     todaysday = endDate.day
-    startDate = datetime.today() - timedelta(days=todaysday - 1)
+    startDate = datetime.today() - timedelta(days=todaysday - modifier)
     tempMonthPair.append(str(startDate)[:10])
     tempMonthPair.append(str(endDate)[:10])
     monthPairs.append(tempMonthPair)
+    #print(tempMonthPair)
     tempMonthPair = []
     while NumberOfMonths > 1:
         endDate = startDate - timedelta(days=1)
@@ -71,6 +74,7 @@ def LastXMonths(NumberOfMonths):
         tempMonthPair.append(str(startDate)[:10])
         tempMonthPair.append(str(endDate)[:10])
         monthPairs.append(tempMonthPair)
+        #print(tempMonthPair)
         tempMonthPair = []
         NumberOfMonths = NumberOfMonths - 1
 
@@ -78,14 +82,10 @@ def LastXMonths(NumberOfMonths):
     db = Database()
     for item in monthPairs:
         tempMonthPair = []
-        tempMonthPair.append(datetime.strptime(item[0], '%Y-%m-%d').strftime("%B"))
+        tempMonthPair.append(datetime.strptime(item[0], '%Y-%m-%d').strftime("%B %Y"))
         tempMonthPair.append(db.Period(item[1], item[0]))
         monthMoney.append(tempMonthPair)
-        test = db.Period(item[1], item[0])
-        print(datetime.strptime(item[0], '%Y-%m-%d').strftime("%B"))
-        print(test)
-    print(monthMoney)
-    return monthPairs
+    return monthMoney
 
 def PreviousMonthToDate():
     mostRecentDate = str(datetime.today() - timedelta(days=1))[:10]
@@ -98,19 +98,3 @@ def PreviousMonthToDate():
     db = Database()
     mostRecentDate = db.Period(startdate, enddate)
     return startdate, enddate
-
-def allowedFiles(filename):
-    allowed = True
-    if not "." in filename:
-        allowed =  False
-        return allowed
-    ext = filename.rsplit(".", 1)[1]    
-    if ext.upper() != "TXT":
-        allowed =  False
-    return allowed
-
-def fileValid(filename):
-    valid = True
-    return valid
-
-monthPairs = LastXMonths(10)

@@ -1,27 +1,12 @@
 from database import *
 from ftplib import FTP
 import configparser
+from os import listdir
+import os
 
 # Reading config file
 config = configparser.ConfigParser()
 config.read('config.ini')
-
-def ConnectFTP():
-    print('Connecting to FTP...')
-    ftp = FTP(config["DEFAULT"]["ServerAdress"])
-    ftp.login(user= config["DEFAULT"]["UserName"], passwd = config["DEFAULT"]["Password"])
-    ftp.cwd('data/dibs')
-    filelist=[]
-    ftp.retrlines('LIST', filelist.append)
-    for item in filelist:
-        item = item.split(' ')
-        item = item[len(item)- 1]
-        print('Downloading: ' + item)
-        download(ftp,item)
-    return item
-
-def download(ftp, filename):
-    ftp.retrbinary("RETR " + filename, open(filename, "wb").write, 8*1024)
     
 def ReadFile(filepath):
     linesInFile = []
@@ -62,31 +47,29 @@ def ReadData(file):
             date = ReformatDate(item[6])
             insertOrder(item[0], item[1], item[2], item[3], item[4], item[5], date, item[7])
 
-def OldMethod():
-    manualMode = True
-    if manualMode == False:
-        # Getting file from FTP
-        filename = ConnectFTP()
-        # Creating an array from file
-        print('Parsing data from FTP')
-        linesInFile = ReadFile(filename)
-    else:
-        # Used to manually pull in data from file
-        print('Parsing data from file using manual mode')
-        #linesInFile = ReadFile('5327740__captured__09_10_2019_21_00_02.txt')
-        #linesInFile = ReadFile('5327740__captured__10_10_2019_10_00_04.txt')
-        linesInFile = ReadFile('test.txt')
+def allowedFiles(filename):
+    allowed = True
+    if not "." in filename:
+        allowed =  False
+        return allowed
+    if not "captured" in filename:
+        allowed =  False
+        return allowed        
+    ext = filename.rsplit(".", 1)[1]    
+    if ext.upper() != "TXT":
+        allowed =  False
+    return allowed
 
-    # Figuring out which part of the array contains relevant data
-    line = StartingLine(linesInFile)
-
-    # Loop through array starting from relevant place and saving to DB
-    n = 1
-    print('Storing data in database.')
-    for item in linesInFile:
-        n += 1
-        if n > line:
-            item = item.split(",")
-            date = ReformatDate(item[6])
-            insertOrder(item[0], item[1], item[2], item[3], item[4], item[5], date, item[7])
-    
+def checkForFile():
+    folder = os.path.join(os.path.dirname(__file__), config["DEFAULT"]["ReportsFilePath"])
+    for item in os.listdir(folder):
+        n = 1
+        linesInFile = ReadFile(os.path.join(folder, item))
+        line = StartingLine(linesInFile)
+        print('Storing data in database.')
+        for item in linesInFile:
+            n += 1
+            if n > line:
+                item = item.split(",")
+                date = ReformatDate(item[6])
+                insertOrder(item[0], item[1], item[2], item[3], item[4], item[5], date, item[7])

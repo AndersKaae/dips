@@ -10,6 +10,7 @@ mostRecentDate = str(datetime.today() - timedelta(days=1))[:10]
 
 @app.route("/", methods=['GET', 'POST'])
 def home():
+	checkForFile()
 	formdata = ""
 	# This is needed to avoid error on first load since the form contains no data
 	if request.method == 'POST': 
@@ -26,9 +27,9 @@ def home():
 		noOfDays = 7	
 	lastweek = LastXDays(noOfDays)
 	previousLastThirtyDays = db.Period(str(datetime.today() - timedelta(days=30))[:10], str(datetime.today() - timedelta(days=60))[:10])
-
 	result = db.ListPayments()
-	return render_template('home.html', posts = result, dayRevenue = dayRevenue, monthToDate = monthToDate, previousMonthToDate = previousMonthToDate, lastThirtyDays = lastThirtyDays, previousLastThirtyDays = previousLastThirtyDays, lastweek= lastweek)
+	monthlyRevenue = LastXMonths(24)
+	return render_template('home.html', posts = result, dayRevenue = dayRevenue, monthToDate = monthToDate, previousMonthToDate = previousMonthToDate, lastThirtyDays = lastThirtyDays, previousLastThirtyDays = previousLastThirtyDays, lastweek = lastweek, monthlyRevenue = monthlyRevenue[::-1])
 
 @app.route("/upload", methods=["GET", "POST"])
 def upload_file():
