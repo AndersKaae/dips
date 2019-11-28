@@ -60,12 +60,11 @@ def LastXMonths(NumberOfMonths):
     # Checking if endDate revenue is > 0
     if db.Period(str(endDate)[:10], str(endDate)[:10]) == 0:
         endDate = endDate - timedelta(days=1)
-    todaysday = endDate.day
     startDate = datetime.today() - timedelta(days=datetime.today().day - 1)
     tempMonthPair.append(str(startDate)[:10])
     tempMonthPair.append(str(endDate)[:10])
     monthPairs.append(tempMonthPair)
-    print(tempMonthPair)
+    #print(tempMonthPair)
     tempMonthPair = []
     while NumberOfMonths > 1:
         endDate = startDate - timedelta(days=1)
@@ -73,7 +72,7 @@ def LastXMonths(NumberOfMonths):
         tempMonthPair.append(str(startDate)[:10])
         tempMonthPair.append(str(endDate)[:10])
         monthPairs.append(tempMonthPair)
-        print(tempMonthPair)
+        #print(tempMonthPair)
         tempMonthPair = []
         NumberOfMonths = NumberOfMonths - 1
 

@@ -6,7 +6,11 @@ import os
 app = Flask(__name__)
 app.secret_key = "d4bb81b1-2038-4f56-8bec-9e35472c4826"
 
-mostRecentDate = str(datetime.today() - timedelta(days=1))[:10]
+db = Database()
+if db.Period(str(datetime.today())[:10], str(datetime.today())[:10]) == 0:
+	mostRecentDate = str(datetime.today() - timedelta(days=1))[:10]
+else:
+	mostRecentDate = str(datetime.today())[:10]
 
 @app.route("/", methods=['GET', 'POST'])
 def home():
