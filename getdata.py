@@ -4,10 +4,12 @@ import configparser
 from os import listdir
 import os
 
-# Reading config file
-config = configparser.ConfigParser()
-config.read('config.ini')
-    
+def CheckDirectoryStructure():
+    if not os.path.exists(os.path.join(os.path.dirname(__file__), "reports/")):
+        os.makedirs(os.path.join(os.path.dirname(__file__), "reports/"))
+    if not os.path.exists(os.path.join(os.path.dirname(__file__), "temp/")):
+        os.makedirs(os.path.join(os.path.dirname(__file__), "temp/"))
+
 def ReadFile(filepath):
     linesInFile = []
     with open(filepath, 'rb') as fp:
@@ -61,7 +63,7 @@ def allowedFiles(filename):
     return allowed
 
 def checkForFile():
-    folder = os.path.join(os.path.dirname(__file__), config["DEFAULT"]["ReportsFilePath"])
+    folder = os.path.join(os.path.dirname(__file__), "reports/")
     for item in os.listdir(folder):
         n = 1
         linesInFile = ReadFile(os.path.join(folder, item))

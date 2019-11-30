@@ -1,8 +1,6 @@
-import pymysql
 import sqlite3
 from decimal import Decimal
 from datetime import datetime, timedelta
-from urllib.request import urlopen
 
 class Database:
     def __init__(self):
@@ -84,18 +82,3 @@ def LastXMonths(NumberOfMonths):
         tempMonthPair.append(db.Period(item[1], item[0]))
         monthMoney.append(tempMonthPair)
     return monthMoney
-
-def PreviousMonthToDate():
-    mostRecentDate = str(datetime.today() - timedelta(days=1))[:10]
-    dateAsString = str(mostRecentDate)
-    dateAsString = dateAsString.split('-')
-    dateAsString[1] = str(int(dateAsString[1]) - 1)
-    startdate = dateAsString[0] + "-" + dateAsString[1].zfill(2) + "-" + dateAsString[2]
-    dateAsString[2] = '01'
-    enddate = dateAsString[0] + "-" + dateAsString[1] + "-" + dateAsString[2]
-    db = Database()
-    mostRecentDate = db.Period(startdate, enddate)
-    return startdate, enddate
-
-
-LastXMonths(24)
