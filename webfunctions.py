@@ -48,6 +48,15 @@ def LastXDays(NumberOfDays):
         NumberOfDays = NumberOfDays - 1
     return revenuePerDay
 
+def PreviousMonthToDate(endDate):
+    endDate = datetime.today()
+    day = endDate.day
+    lastDayOfLastMonth = endDate - timedelta(days=day)
+    startDate = lastDayOfLastMonth - timedelta(days=lastDayOfLastMonth.day - 1)
+    endDate = startDate + timedelta(days=day - 1)
+    return startDate, endDate
+
+
 def LastXMonths(NumberOfMonths):
     db = Database()
     monthPairs = []
@@ -82,3 +91,6 @@ def LastXMonths(NumberOfMonths):
         tempMonthPair.append(db.Period(item[1], item[0]))
         monthMoney.append(tempMonthPair)
     return monthMoney
+
+
+PreviousMonthToDate(1)

@@ -29,8 +29,11 @@ def home():
 		endDate = datetime.today()
 
 	# From current lastest date to the first in the month
-	monthToDate = db.Period(str(endDate)[:10], str(endDate - timedelta(days=endDate.day - 1))[:10])
-	previousMonthToDate = LastXMonths(24)[1][1]
+	startDate = endDate - timedelta(days=endDate.day - 1)
+	monthToDate = db.Period(str(endDate)[:10], str(startDate)[:10])
+	previousMonthStart, previousMonthEnd  = PreviousMonthToDate(endDate)
+	previousMonthToDate = db.Period(str(previousMonthEnd)[:10], str(previousMonthStart)[:10])
+	print(PreviousMonthToDate(endDate))
 	lastThirtyDays = db.Period(str(endDate)[:10], str(endDate - timedelta(days=29))[:10])
 	lastweek = LastXDays(noOfDays)
 	previousLastThirtyDays = db.Period(str(datetime.today() - timedelta(days=30))[:10], str(datetime.today() - timedelta(days=59))[:10])
