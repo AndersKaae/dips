@@ -28,6 +28,23 @@ class Database:
                     sum = sum + Decimal(item[1])
             return sum
 
+def LastYears(NumberofYears, today):
+    db = Database()
+    revenuePerYear = []
+    currentYear = int(str(today)[:4])
+    i = 1
+    while i <= NumberofYears:
+        if i == 1:
+            startDate = str(today)[:10]
+        else:
+            startDate = str(currentYear) + "-12-31"
+        revenue = db.Period(startDate, str(currentYear) + "-01-01")
+        tempList = [currentYear, revenue]
+        revenuePerYear.append(tempList)
+        currentYear -= 1
+        i += 1
+    return(revenuePerYear)
+
 def LastXDays(NumberOfDays):
     totalDays = NumberOfDays
     db = Database()
@@ -55,7 +72,6 @@ def PreviousMonthToDate(endDate):
     startDate = lastDayOfLastMonth - timedelta(days=lastDayOfLastMonth.day - 1)
     endDate = startDate + timedelta(days=day - 1)
     return startDate, endDate
-
 
 def LastXMonths(NumberOfMonths):
     db = Database()
@@ -93,4 +109,5 @@ def LastXMonths(NumberOfMonths):
     return monthMoney
 
 
-PreviousMonthToDate(1)
+#PreviousMonthToDate(1)
+print(LastYears(4, datetime.today()))

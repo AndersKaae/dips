@@ -105,4 +105,10 @@
 		</tr>
 	</table>
 
+	<p>Revenue pr. year</p>
+
+	{% for item in yearlyRevenue %}		  
+		<p>{{ item[0] }}: {{ "{:,.2f}".format(item[1]) }} kr.</p>
+	{% endfor %}
+
 {% endblock content %}

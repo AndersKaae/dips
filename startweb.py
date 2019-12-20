@@ -39,7 +39,8 @@ def home():
 	previousLastThirtyDays = db.Period(str(datetime.today() - timedelta(days=30))[:10], str(datetime.today() - timedelta(days=59))[:10])
 	result = db.ListPayments()
 	monthlyRevenue = LastXMonths(24)
-	return render_template('home.html', posts = result, monthToDate = monthToDate, previousMonthToDate = previousMonthToDate, lastThirtyDays = lastThirtyDays, previousLastThirtyDays = previousLastThirtyDays, lastweek = lastweek, monthlyRevenue = monthlyRevenue[::-1])
+	yearlyRevenue = LastYears(3, datetime.today())
+	return render_template('home.html', posts = result, monthToDate = monthToDate, previousMonthToDate = previousMonthToDate, lastThirtyDays = lastThirtyDays, previousLastThirtyDays = previousLastThirtyDays, lastweek = lastweek, monthlyRevenue = monthlyRevenue[::-1], yearlyRevenue = yearlyRevenue)
 
 @app.route("/upload", methods=["GET", "POST"])
 def upload_file():
