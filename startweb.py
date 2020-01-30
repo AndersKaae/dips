@@ -8,6 +8,8 @@ app.secret_key = "d4bb81b1-2038-4f56-8bec-9e35472c4826"
 
 CheckDirectoryStructure()
 
+lastUpdateTime = ""
+
 @app.route("/", methods=['GET', 'POST'])
 def home():
 	checkForFile()
@@ -39,8 +41,7 @@ def home():
 	previousLastThirtyDays = db.Period(str(datetime.today() - timedelta(days=30))[:10], str(datetime.today() - timedelta(days=59))[:10])
 	result = db.ListPayments()
 	monthlyRevenue = LastXMonths(24)
-	yearlyRevenue = LastYears(3, datetime.today())
-	return render_template('home.html', posts = result, monthToDate = monthToDate, previousMonthToDate = previousMonthToDate, lastThirtyDays = lastThirtyDays, previousLastThirtyDays = previousLastThirtyDays, lastweek = lastweek, monthlyRevenue = monthlyRevenue[::-1], yearlyRevenue = yearlyRevenue)
+	return render_template('home.html', posts = result, monthToDate = monthToDate, previousMonthToDate = previousMonthToDate, lastThirtyDays = lastThirtyDays, previousLastThirtyDays = previousLastThirtyDays, lastweek = lastweek, monthlyRevenue = monthlyRevenue[::-1], lastUpdateTime = lastUpdateTime)
 
 @app.route("/upload", methods=["GET", "POST"])
 def upload_file():

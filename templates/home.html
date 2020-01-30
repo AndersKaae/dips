@@ -33,7 +33,9 @@
 		  height: 400,
 		  bar: {groupWidth: "95%"},
 		  legend: { position: "none" },
-		};
+		  vAxis: {minValue: 0}
+		}
+		;
 		var chart = new google.visualization.ColumnChart(document.getElementById("dailyRevenue_div"));
 		chart.draw(view, options);
 	}
@@ -105,10 +107,6 @@
 		</tr>
 	</table>
 
-	<p>Revenue pr. year</p>
-
-	{% for item in yearlyRevenue %}		  
-		<p>{{ item[0] }}: {{ "{:,.2f}".format(item[1]) }} kr.</p>
-	{% endfor %}
+	<p style="text-align: right;font-style: italic;">Last updated: {{ lastUpdateTime }}</p>
 
 {% endblock content %}
