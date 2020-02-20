@@ -41,7 +41,7 @@ def home():
 	previousLastThirtyDays = db.Period(str(datetime.today() - timedelta(days=30))[:10], str(datetime.today() - timedelta(days=59))[:10])
 	result = db.ListPayments()
 	monthlyRevenue = LastXMonths(24)
-	return render_template('home.html', posts = result, monthToDate = monthToDate, previousMonthToDate = previousMonthToDate, lastThirtyDays = lastThirtyDays, previousLastThirtyDays = previousLastThirtyDays, lastweek = lastweek, monthlyRevenue = monthlyRevenue[::-1], lastUpdateTime = lastUpdateTime)
+	return render_template('home.html', posts = result, monthToDate = monthToDate, previousMonthToDate = previousMonthToDate, lastThirtyDays = lastThirtyDays, previousLastThirtyDays = previousLastThirtyDays, lastweek = lastweek, monthlyRevenue = monthlyRevenue[::-1], lastUpdateTime = GetLastUpdate())
 
 @app.route("/upload", methods=["GET", "POST"])
 def upload_file():
@@ -53,6 +53,7 @@ def upload_file():
 				csvFile.save(os.path.join(os.path.dirname(__file__), "temp/", csvFile.filename))
 				message = Markup("<span>Files saved</span>")
 				ReadData(os.path.join(os.path.dirname(__file__), "temp/", csvFile.filename))
+				SetLastUpdate(datetime.today().strftime("%d-%m-%Y %H:%M"))
 				return redirect(url_for('home'))
 			else:
 				message = Markup("<span>Invalid file type</span>")

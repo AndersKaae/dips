@@ -17,6 +17,10 @@ class BigMoney(Base):
 	fullfillTime = Column(String(200), nullable=True)
 	aquirer = Column(String(30), nullable=False)
 
+class LastUpdate(Base):
+	__tablename__ = 'lastupdate'
+	date = Column(String(20), primary_key=True)
+
 Session = sessionmaker(bind=engine)
 Session = sessionmaker()
 Session.configure(bind=engine)
@@ -29,5 +33,15 @@ def insertOrder(orderNo, transactionNo, amount, currency, cardType, authTime, fu
     if str(isItUnique) ==  "None":
         bigmoney = BigMoney(orderNo = orderNo, transactionNo = transactionNo, amount = amount, currency = currency, cardType = cardType, authTime = authTime, fullfillTime = fullfillTime, aquirer = aquirer)
         session.add(bigmoney)
-        session.commit() 
+        session.commit()
         session.close()
+
+def GetLastUpdate():
+	query = session.query(LastUpdate).first()
+	date = query.date
+	return date
+
+def SetLastUpdate(date):
+	query = session.query(LastUpdate).first()
+	query.date = date
+	session.commit()
