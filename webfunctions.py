@@ -66,10 +66,14 @@ def LastXDays(NumberOfDays):
     return revenuePerDay
 
 def PreviousMonthToDate(endDate):
+    # Should probably refactor.... endDate input is not used....
     endDate = datetime.today()
     day = endDate.day
     lastDayOfLastMonth = endDate - timedelta(days=day)
     startDate = lastDayOfLastMonth - timedelta(days=lastDayOfLastMonth.day - 1)
+    # This is done to make last month stop if it is shorter than current month
+    if day > lastDayOfLastMonth.day:
+        day = lastDayOfLastMonth.day
     endDate = startDate + timedelta(days=day - 1)
     return startDate, endDate
 
