@@ -1,13 +1,14 @@
 from sqlalchemy import create_engine, ForeignKey, Column, Integer, String, UnicodeText, func
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
+from decimal import Decimal
 
 engine = create_engine('sqlite:///dips1.db', connect_args={'check_same_thread': False})
 
 Base = declarative_base()
 
-class BigMoney(Base):
-	__tablename__ = 'bigmoney'
+class Transactions(Base):
+	__tablename__ = 'transactions'
 	orderNo = Column(String(100), primary_key=True)
 	transactionNo = Column(String(30), nullable=False)
 	amount = Column(String(30), nullable=False)
@@ -16,6 +17,11 @@ class BigMoney(Base):
 	authTime = Column(String(200), nullable=False)
 	fullfillTime = Column(String(200), nullable=True)
 	aquirer = Column(String(30), nullable=False)
+
+class Refunds(Base):
+	__tablename__ = 'refunds'
+	orderNo = Column(String(100), primary_key=True)
+	amount = Column(String(30), nullable=False)
 
 class LastUpdate(Base):
 	__tablename__ = 'lastupdate'
@@ -29,10 +35,10 @@ Base.metadata.create_all(engine)
 session.commit()
 
 def insertOrder(orderNo, transactionNo, amount, currency, cardType, authTime, fullfillTime, aquirer):
-    isItUnique = session.query(BigMoney).filter_by(orderNo = orderNo).first()
+    isItUnique = session.query(Transactions).filter_by(orderNo = orderNo).first()
     if str(isItUnique) ==  "None":
-        bigmoney = BigMoney(orderNo = orderNo, transactionNo = transactionNo, amount = amount, currency = currency, cardType = cardType, authTime = authTime, fullfillTime = fullfillTime, aquirer = aquirer)
-        session.add(bigmoney)
+        transactions = Transactions(orderNo = orderNo, transactionNo = transactionNo, amount = amount, currency = currency, cardType = cardType, authTime = authTime, fullfillTime = fullfillTime, aquirer = aquirer)
+        session.add(transactions)
         session.commit()
         session.close()
 
@@ -45,3 +51,14 @@ def SetLastUpdate(date):
 	query = session.query(LastUpdate).first()
 	query.date = date
 	session.commit()
+
+def insertRefund(orderNo, amount):
+    isItUnique = session.query(Refunds).filter_by(orderNo = orderNo).first()
+    if str(isItUnique) ==  "None":
+        refunds = Refunds(orderNo = orderNo, amount = amount)
+        ## Deducting refund if not seen before
+        order = session.query(Transactions).filter_by(orderNo = orderNo).first()
+        order.amount = str(Decimal(order.amount) - Decimal(amount))
+        session.add(refunds)
+        session.commit()
+        session.close()

@@ -8,7 +8,7 @@ class Database:
         self.cur = self.con.cursor()
 
     def ListPayments(self):
-            self.cur.execute('SELECT orderNo, amount, fullfillTime FROM bigmoney ORDER BY fullfillTime DESC')
+            self.cur.execute('SELECT orderNo, amount, fullfillTime FROM transactions ORDER BY fullfillTime DESC')
             result = self.cur.fetchall()
             return result
 
@@ -16,7 +16,7 @@ class Database:
             sum = 0
             relevant = False
             toDate = str(datetime.strptime(toDate, '%Y-%m-%d') - timedelta(days=1))[:10]
-            self.cur.execute('SELECT orderNo, amount, fullfillTime FROM bigmoney ORDER BY fullfillTime DESC')
+            self.cur.execute('SELECT orderNo, amount, fullfillTime FROM transactions ORDER BY fullfillTime DESC')
             total = self.cur.fetchall()
             for item in total:
                 if str(item[2]) == str(fromDate):

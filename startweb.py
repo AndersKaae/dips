@@ -12,7 +12,6 @@ lastUpdateTime = ""
 
 @app.route("/", methods=['GET', 'POST'])
 def home():
-	checkForFile()
 	formdata = ""
 
 	# This is needed to avoid error on first load since the form contains no data

@@ -1,9 +1,9 @@
 from database import *
-from ftplib import FTP
 import configparser
 from os import listdir
 import os
 
+## Creates the necessarry directory structure
 def CheckDirectoryStructure():
     if not os.path.exists(os.path.join(os.path.dirname(__file__), "reports/")):
         os.makedirs(os.path.join(os.path.dirname(__file__), "reports/"))
@@ -39,6 +39,7 @@ def ReformatDate(date):
     return newDate
 
 def ReadData(file):
+    print(file)
     linesInFile = ReadFile(file)
     line = StartingLine(linesInFile)
     n = 1
@@ -46,15 +47,18 @@ def ReadData(file):
         n += 1
         if n > line:
             item = item.split(",")
-            date = ReformatDate(item[6])
-            insertOrder(item[0], item[1], item[2], item[3], item[4], item[5], date, item[7])
+            if 'captured' in file:
+                date = ReformatDate(item[6])
+                insertOrder(item[0], item[1], item[2], item[3], item[4], item[5], date, item[7])
+            if 'refunded' in file:
+                insertRefund(item[0], item[2])
 
 def allowedFiles(filename):
     allowed = True
     if not "." in filename:
         allowed =  False
         return allowed
-    if not "captured" in filename:
+    if not "captured" in filename and not "refunded" in filename:
         allowed =  False
         return allowed        
     ext = filename.rsplit(".", 1)[1]    
@@ -62,16 +66,5 @@ def allowedFiles(filename):
         allowed =  False
     return allowed
 
-def checkForFile():
-    folder = os.path.join(os.path.dirname(__file__), "reports/")
-    for item in os.listdir(folder):
-        n = 1
-        linesInFile = ReadFile(os.path.join(folder, item))
-        line = StartingLine(linesInFile)
-        print('Storing data in database.')
-        for item in linesInFile:
-            n += 1
-            if n > line:
-                item = item.split(",")
-                date = ReformatDate(item[6])
-                insertOrder(item[0], item[1], item[2], item[3], item[4], item[5], date, item[7])
+#ReadData('/Users/anders/Downloads/5327740__captured__10_05_2020_22_20_01.txt')
+ReadData('/Users/anders/Downloads/5327740__refunded__12_05_2020_21_50_02.txt')
