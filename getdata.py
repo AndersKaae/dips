@@ -65,6 +65,3 @@ def allowedFiles(filename):
     if ext.upper() != "TXT":
         allowed =  False
     return allowed
-
-#ReadData('/Users/anders/Downloads/5327740__captured__10_05_2020_22_20_01.txt')
-ReadData('/Users/anders/Downloads/5327740__refunded__12_05_2020_21_50_02.txt')
