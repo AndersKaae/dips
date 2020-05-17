@@ -1,17 +1,9 @@
 {% extends "layout.html" %}
 {% block content %}
 
-<style>
-
-</style>
-
-
     <div class="container" id="upload-page">
-        
-        <p>Here you upload either caputured transaction report or the refunded report.</p>
-        
+        <p>Here you upload either captured transaction report or the refunded report.</p>
         <div id ="form-container">
-            
                 <form action="/upload" method="POST" enctype="multipart/form-data">
                     <div class="form-group">
                         <div class="custom-file">
@@ -30,19 +22,14 @@
                             //replace the "Choose a file" label
                             $(this).next('.custom-file-label').html(fileName);
                         })
-                </script>
-            
+                </script>    
         </div>
-
         <div class="flashes">
                 <br>
                 {% for message in get_flashed_messages() %}
                     <p class="text-danger">{{ message }}</p>
                 {% endfor %}
         </div>
-    
     </div>
-
-    
 
 {% endblock content %} 
