@@ -68,15 +68,17 @@
 		chart.draw(view, options);
 	}
 	</script>
-<div class="row"> 
-	<form action="/" method="post">
-		<div class="form-group">
-			<label for="exampleInputEmail1">Number of days:</label>
-			<input class="form-control" type="text" name="days" value="{{ lastweek|length }}"></input>
-		</div>
-		<input class="btn btn-primary" type="submit" value="Submit"></input>
-	</form>
-</div>
+
+<div class="container">
+	<div class="row"> 
+		<form action="/" method="post">
+			<div class="form-group">
+				<label for="exampleInputEmail1">Number of days:</label>
+				<input class="form-control" type="text" name="days" value="{{ lastweek|length }}"></input>
+			</div>
+			<input class="btn btn-primary" type="submit" value="Submit"></input>
+		</form>
+	</div>
 
 	<div id="dailyRevenue_div" style="width: 100 %; height: 300px;"></div>
 
@@ -108,5 +110,5 @@
 	</table>
 
 	<p style="text-align: right;font-style: italic;">Last updated: {{ lastUpdateTime }}</p>
-
+</div>
 {% endblock content %}

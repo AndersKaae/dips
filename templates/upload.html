@@ -1,15 +1,19 @@
 {% extends "layout.html" %}
 {% block content %}
 
-    <div class="container">
+<style>
+
+</style>
+
+
+    <div class="container" id="upload-page">
         
         <p>Here you upload either caputured transaction report or the refunded report.</p>
         
-        <div class="row w-50 p-3">
-            <div class="col">
+        <div id ="form-container">
+            
                 <form action="/upload" method="POST" enctype="multipart/form-data">
                     <div class="form-group">
-                        <label>Select the CSV file:</label>
                         <div class="custom-file">
                             <input type="file" class="custom-file-input" name="inputField" id="image">
                             <label class="custom-file-label" for="image">Select file...</label>
@@ -27,7 +31,7 @@
                             $(this).next('.custom-file-label').html(fileName);
                         })
                 </script>
-            </div>
+            
         </div>
 
         <div class="flashes">
