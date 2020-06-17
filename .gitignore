@@ -5,6 +5,8 @@ __pycache__/
 *.db
 Pipfile.lock
 Pipfile
+chromedriver
 config.ini
 temp/*
 reports/*
+secrets.py
