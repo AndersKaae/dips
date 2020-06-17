@@ -5,9 +5,9 @@ from secrets import *
 
 def selenium(url):
 	options = Options()
-	#options.add_argument('--headless')
-	#options.add_argument('--disable-gpu')
-	options.add_experimental_option("detach", True)
+	options.add_argument('--headless')
+	options.add_argument('--disable-gpu')
+	#options.add_experimental_option("detach", True)
 	browser = webdriver.Chrome('./chromedriver', chrome_options=options)
 	browser.get(url=url)
 
@@ -41,4 +41,4 @@ def selenium(url):
 
 	return browser.page_source
 
-browser = selenium("https://payment.architrade.com/login/login.action")
+#browser = selenium("https://payment.architrade.com/login/login.action")

@@ -19,4 +19,3 @@ while True:
             ReadData(os.path.join(os.path.dirname(__file__), "reports/", entry.name))
             #os.remove("ChangedFile.csv")
     firstRun = False
-    
