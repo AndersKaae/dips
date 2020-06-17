@@ -3,6 +3,7 @@ from database import *
 from getdata import ReadData
 from autobrowse import selenium
 import time
+from datetime import datetime
 
 firstRun = True
 
@@ -17,5 +18,6 @@ while True:
     with os.scandir('reports/') as entries:
         for entry in entries:
             ReadData(os.path.join(os.path.dirname(__file__), "reports/", entry.name))
-            #os.remove("ChangedFile.csv")
+            os.remove("ChangedFile.csv")
     firstRun = False
+    SetLastUpdate(datetime.today().strftime("%d-%m-%Y %H:%M"))
