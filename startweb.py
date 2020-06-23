@@ -60,5 +60,10 @@ def upload_file():
 			return redirect(request.url)
 	return render_template("upload.html")
 
+@app.route("/top", methods=["GET", "POST"])
+def top():
+	result = TopX()
+	return render_template('top.html', toplist = result)
+
 if __name__ == '__main__':
 	app.run(debug=True)

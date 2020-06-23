@@ -112,6 +112,9 @@ def LastXMonths(NumberOfMonths):
         monthMoney.append(tempMonthPair)
     return monthMoney
 
-
-#PreviousMonthToDate(1)
-print(LastYears(4, datetime.today()))
+def TopX():
+    data = LastXDays(365)
+    data.sort()
+    last_10_slice = slice(-10, None)
+    data = data[last_10_slice]
+    return data
