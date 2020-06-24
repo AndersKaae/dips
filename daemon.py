@@ -12,7 +12,7 @@ def ProcessReports():
             try:
                 ReadData(fileandpath)
             except:
-                print('Failed to read data'.)
+                print('Failed to read data.')
             os.remove(fileandpath)
 
 def RunDaemon():
