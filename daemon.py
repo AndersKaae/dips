@@ -9,7 +9,10 @@ def ProcessReports():
     with os.scandir('reports/') as entries:
         for entry in entries:
             fileandpath = os.path.join(os.path.dirname(__file__), "reports/", entry.name)
-            ReadData(fileandpath)
+            try:
+                ReadData(fileandpath)
+            except:
+                print('Failed to read data'.)
             os.remove(fileandpath)
 
 def RunDaemon():
