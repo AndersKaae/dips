@@ -12,7 +12,7 @@ def ProcessReports():
             try:
                 ReadData(fileandpath)
             except:
-                print('Failed to read data.')
+                print(str(datetime.today().strftime("%d-%m-%Y %H:%M")) + ': Failed to read data.')
             os.remove(fileandpath)
 
 def RunDaemon():
@@ -22,7 +22,10 @@ def RunDaemon():
             print(str(datetime.today().strftime("%d-%m-%Y %H:%M")) + ': Waiting for 20 minutes to fetch report...')
             time.sleep(1200)
         print('Getting data with Selenium')
-        selenium("https://payment.architrade.com/login/login.action")
+        try:
+            selenium("https://payment.architrade.com/login/login.action")
+        except:
+            print(str(datetime.today().strftime("%d-%m-%Y %H:%M")) +': Selenium scrape failed.')
         print(str(datetime.today().strftime("%d-%m-%Y %H:%M")) + ': Waiting for 10 minutes for report to arrive...')
         time.sleep(600)
         ProcessReports()
