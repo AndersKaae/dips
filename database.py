@@ -91,7 +91,7 @@ def PeriodRefactor(fromDate, toDate):
     query = session.query(Transactions).filter(Transactions.fullfillTime.between(fromDate, toDate))
     sum = 0
     for i in query:
-        sum = sum + i.amount
+        sum = sum + float(i.amount)
     return sum
 
 def PurePeriod(fromDate, toDate):
