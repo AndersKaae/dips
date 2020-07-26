@@ -1,0 +1,17 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<p>Since we can't pull product values from Google Analytics we have to manually update them here.</p>
+<form action="/config" method="post">
+    <div class="form-group">
+        {% for item in price_data %}
+        <div class="form-group form-inline"> 
+            <label for="label">{{ item[0] }}: </label>
+            <input style="position: absolute;left: 400px;" class="form-control" type="text" name="{{ item[0] }}" value="{{ item[1] }}"></input>
+        </div>
+        {% endfor %}
+    </div>
+    <input class="btn btn-primary" type="submit" value="Submit"></input>
+</form>
+<br>
+{% endblock content %}

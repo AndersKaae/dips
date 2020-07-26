@@ -1,0 +1,79 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<script type="text/javascript">
+    google.charts.load("current", {packages:['corechart']});
+    
+    google.charts.setOnLoadCallback(dailyRevenue);
+    
+    google.charts.setOnLoadCallback(dailyProducts);
+    
+    function dailyRevenue() {
+
+      var data = google.visualization.arrayToDataTable([
+        ['Product',
+        {% for item in unique_product %}
+            '{{ item }}',
+        {% endfor %}
+        
+        { role: 'annotation' } ],
+         {% for item in string_revenue_pr_day %}	  
+		  	[ {{ item | safe }} ]
+			{% if loop.index < string_revenue_pr_day|length %},{% endif %}
+		  {% endfor %}
+      ]);
+
+      var options = {
+        title: "Revenue pr day",
+        height: 400,
+        legend: { position: 'top', maxLines: 3 },
+        bar: {groupWidth: '75%'},
+        isStacked: true,
+      };
+
+      var chart = new google.visualization.ColumnChart(document.getElementById('dailyRevenue_div'));
+      chart.draw(data, options);
+  }
+
+  function dailyProducts() {
+
+var data = google.visualization.arrayToDataTable([
+  ['Product',
+  {% for item in unique_product %}
+      '{{ item }}',
+  {% endfor %}
+  
+  { role: 'annotation' } ],
+   {% for item in string_products_pr_day %}	  
+        [ {{ item | safe }} ]
+      {% if loop.index < string_products_pr_day|length %},{% endif %}
+    {% endfor %}
+]);
+
+var options = {
+  title: "Products sold pr. day",
+  height: 400,
+  legend: { position: 'top', maxLines: 3 },
+  bar: {groupWidth: '75%'},
+  isStacked: true,
+};
+
+    var chart = new google.visualization.ColumnChart(document.getElementById('dailyProducts_div'));
+    chart.draw(data, options);
+}
+  </script>
+<div class="row"> 
+<form action="/products" method="post">
+    <div class="form-group">
+        <label for="exampleInputEmail1">Number of days:</label>
+        <input class="form-control" type="text" name="days" value="{{ days }}"></input>
+    </div>
+    <input class="btn btn-primary" type="submit" value="Submit"></input>
+</form>
+</div>
+
+<div id="dailyRevenue_div" style="width: 100%; height: 300px;"></div>
+<br><br><br><br><br>
+<div id="dailyProducts_div" style="width: 100%; height: 300px;"></div>
+
+{% endblock content %}
