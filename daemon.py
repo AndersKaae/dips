@@ -4,6 +4,7 @@ from getdata import ReadData
 from autobrowse import selenium
 import time
 from datetime import datetime
+from googleAPI import Google_API_Main
 
 def ProcessReports():
     with os.scandir('reports/') as entries:
@@ -31,6 +32,6 @@ def RunDaemon():
         ProcessReports()
         firstRun = False
         SetLastUpdate(datetime.today().strftime("%d-%m-%Y %H:%M"))
-
+        Google_API_Main()
 #ProcessReports()
 RunDaemon()

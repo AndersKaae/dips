@@ -1,35 +1,9 @@
 import sqlite3
 from decimal import Decimal
 from datetime import datetime, timedelta
-
-class Database:
-    def __init__(self):
-        self.con = sqlite3.connect('dips1.db')
-        self.cur = self.con.cursor()
-
-    def ListPayments(self):
-            self.cur.execute('SELECT orderNo, amount, fullfillTime FROM transactions ORDER BY fullfillTime DESC')
-            result = self.cur.fetchall()
-            return result
-
-    def Period(self, fromDate, toDate):
-            sum = 0
-            relevant = False
-            toDate = str(datetime.strptime(toDate, '%Y-%m-%d') - timedelta(days=1))[:10]
-            self.cur.execute('SELECT orderNo, amount, fullfillTime FROM transactions ORDER BY fullfillTime DESC')
-            total = self.cur.fetchall()
-            for item in total:
-                if str(item[2]) == str(fromDate):
-                    relevant = True
-                if str(item[2]) == str(toDate):
-                    relevant = False
-                    break
-                if relevant == True:
-                    sum = sum + Decimal(item[1])
-            return sum
+from database import *
 
 def LastYears(NumberofYears, today):
-    db = Database()
     revenuePerYear = []
     currentYear = int(str(today)[:4])
     i = 1
@@ -38,7 +12,7 @@ def LastYears(NumberofYears, today):
             startDate = str(today)[:10]
         else:
             startDate = str(currentYear) + "-12-31"
-        revenue = db.Period(startDate, str(currentYear) + "-01-01")
+        revenue = PeriodRefactor(startDate, str(currentYear) + "-01-01")
         tempList = [currentYear, revenue]
         revenuePerYear.append(tempList)
         currentYear -= 1
@@ -46,24 +20,32 @@ def LastYears(NumberofYears, today):
     return(revenuePerYear)
 
 def LastXDays(NumberOfDays):
-    totalDays = NumberOfDays
-    db = Database()
-    revenuePerDay = []
-    while NumberOfDays >= 0:
-        tempList = []
-        day = str(datetime.today() - timedelta(days=NumberOfDays))[:10]
-        tempList.append(db.Period(day, day))
-        day = datetime.strptime(day, '%Y-%m-%d')
-        day = day.strftime("%A, %d %b %Y")
-        tempList.append(day)
-        # We are including the current day, but only displaying if revenue is > 0
-        if tempList[0] > 0:
-            revenuePerDay.append(tempList)
-        # Since we are unsure of wether to show current day, we remove the oldest day if today is included
-        if len(revenuePerDay) > totalDays:
-            revenuePerDay.remove(revenuePerDay[0])
-        NumberOfDays = NumberOfDays - 1
-    return revenuePerDay
+    temp_revenue_per_day = []
+    final_revenue_per_day = []
+    start_day = str(datetime.today() - timedelta(days=NumberOfDays))[:10]
+    data = PurePeriod(start_day, datetime.today())
+    daily_amount = 0
+    for item in data:
+        if str(start_day) == str(item.fullfillTime):
+            daily_amount = daily_amount + item.amount
+            latest_day = item.fullfillTime
+        else:
+            temp_revenue_per_day.append(daily_amount)
+            formatted_day = datetime.strptime(str(start_day), '%Y-%m-%d')
+            temp_revenue_per_day.append(formatted_day.strftime("%A, %d %b %Y"))
+            final_revenue_per_day.append(temp_revenue_per_day)
+            temp_revenue_per_day = []
+            daily_amount = 0
+            daily_amount = daily_amount + item.amount
+            start_day = item.fullfillTime
+
+    # This is for the last day
+    temp_revenue_per_day.append(daily_amount)
+    formatted_day = datetime.strptime(str(latest_day), '%Y-%m-%d')
+    formatted_day = formatted_day.strftime("%A, %d %b %Y")
+    temp_revenue_per_day.append(formatted_day)
+    final_revenue_per_day.append(temp_revenue_per_day)
+    return final_revenue_per_day
 
 def PreviousMonthToDate(endDate):
     # Should probably refactor.... endDate input is not used....
@@ -78,20 +60,19 @@ def PreviousMonthToDate(endDate):
     return startDate, endDate
 
 def LastXMonths(NumberOfMonths):
-    db = Database()
     monthPairs = []
     tempMonthPair = []
     monthMoney = []
     # Setting up first month which might be a partial month
     endDate = datetime.today()
     # Checking if endDate revenue is > 0
-    if db.Period(str(endDate)[:10], str(endDate)[:10]) == 0:
+    if PeriodRefactor(str(endDate)[:10], str(endDate)[:10]) == 0:
         endDate = endDate - timedelta(days=1)
     startDate = datetime.today() - timedelta(days=datetime.today().day - 1)
     tempMonthPair.append(str(startDate)[:10])
     tempMonthPair.append(str(endDate)[:10])
     monthPairs.append(tempMonthPair)
-    #print(tempMonthPair)
+    
     tempMonthPair = []
     while NumberOfMonths > 1:
         endDate = startDate - timedelta(days=1)
@@ -99,21 +80,19 @@ def LastXMonths(NumberOfMonths):
         tempMonthPair.append(str(startDate)[:10])
         tempMonthPair.append(str(endDate)[:10])
         monthPairs.append(tempMonthPair)
-        #print(tempMonthPair)
         tempMonthPair = []
         NumberOfMonths = NumberOfMonths - 1
 
     # Passing the month pairs through the periode function
-    db = Database()
     for item in monthPairs:
         tempMonthPair = []
         tempMonthPair.append(datetime.strptime(item[0], '%Y-%m-%d').strftime("%B %Y"))
-        tempMonthPair.append(db.Period(item[1], item[0]))
+        tempMonthPair.append(PeriodRefactor(item[0], item[1]))
         monthMoney.append(tempMonthPair)
     return monthMoney
 
 def TopX():
-    data = LastXDays(365)
+    data = LastXDays(10000)
     data.sort()
     last_10_slice = slice(-10, None)
     data = data[last_10_slice]

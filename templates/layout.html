@@ -5,15 +5,23 @@
 	<link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='images/favicon.ico') }}">
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 	<link rel="stylesheet" type="text/css" href="/static/custom.css">
+	<script src="https://use.fontawesome.com/f8623dc244.js"></script>
 	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 	<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-	<title>DIBS</title>
 	<meta name="robots" content="noindex">
 	<meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+	<title>DIBS</title>
 </head>
 <body>
 	<div class="container">
-	<p class="float-right"><a href="/">Home</a> | <a href="/top">Top</a> | <a href="/upload">Upload data</a></p>
+	<p class="float-right">
+		<a href="/"><i class="fa fa-money" aria-hidden="true"></i> Revenue</a>&nbsp;&nbsp;&nbsp;
+		<a href="/products"><i class="fa fa-cubes" aria-hidden="true"></i>Products</a>&nbsp;&nbsp;&nbsp;
+		<a href="/top"><i class="fa fa-line-chart" aria-hidden="true"></i>Top</a>&nbsp;&nbsp;&nbsp;
+		<a href="/upload"><i class="fa fa-cloud-upload" aria-hidden="true"></i>Upload</a>&nbsp;&nbsp;&nbsp;
+		<a href="/config"><i class="fa fa-cog" aria-hidden="true"></i></a>&nbsp;&nbsp;&nbsp;
+	</p>
 	<div class="text-center"><img src="/static/logo.png"></div>
 	<br>
 	{% block content %}{% endblock %}
