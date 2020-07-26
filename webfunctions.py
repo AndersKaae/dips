@@ -27,7 +27,7 @@ def LastXDays(NumberOfDays):
     daily_amount = 0
     for item in data:
         if str(start_day) == str(item.fullfillTime):
-            daily_amount = daily_amount + int(item.amount)
+            daily_amount = daily_amount + float(item.amount)
             latest_day = item.fullfillTime
         else:
             temp_revenue_per_day.append(daily_amount)
@@ -36,7 +36,7 @@ def LastXDays(NumberOfDays):
             final_revenue_per_day.append(temp_revenue_per_day)
             temp_revenue_per_day = []
             daily_amount = 0
-            daily_amount = daily_amount + int(item.amount)
+            daily_amount = daily_amount + float(item.amount)
             start_day = item.fullfillTime
 
     # This is for the last day
