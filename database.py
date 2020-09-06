@@ -1,4 +1,4 @@
-from sqlalchemy import create_engine, ForeignKey, Column, Integer, String, UnicodeText, func, Date, Float, desc, asc
+from sqlalchemy import create_engine, ForeignKey, Column, Integer, String, UnicodeText, func, Date, Float, desc, asc, Boolean
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from decimal import Decimal
@@ -43,8 +43,9 @@ class GA_prices(Base):
     price = Column(String(30), nullable=False)
 
 class LastUpdate(Base):
-	__tablename__ = 'lastupdate'
-	date = Column(String(20), primary_key=True)
+    __tablename__ = 'lastupdate'
+    date = Column(String(20), primary_key=True)
+    failed = Column(Boolean, nullable=False)
 
 Session = sessionmaker(bind=engine)
 Session = sessionmaker()
@@ -63,16 +64,16 @@ def insertOrder(orderNo, transactionNo, amount, currency, cardType, authTime, fu
 
 def GetLastUpdate():
 	query = session.query(LastUpdate).first()
-	date = query.date
-	return date
+	return query
 
-def SetLastUpdate(date):
+def SetLastUpdate(date, failed):
     query = session.query(LastUpdate).first()
     # If data base is empty it returns "None". Therefore the first tine we add and on subsequent updates we just modify value
     if query != None:
         query.date = date
+        query.failed = failed
     else:
-        lastUpdate = LastUpdate(date = date)
+        lastUpdate = LastUpdate(date = date, failed = failed)
         session.add(lastUpdate)
     session.commit()
 

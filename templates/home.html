@@ -109,6 +109,11 @@
 		</tr>
 	</table>
 
-	<p style="text-align: right;font-style: italic;">Last updated: {{ lastUpdateTime }}</p>
+	<p style="text-align: right;font-style: italic;">Last updated: {{ lastUpdateTime.date }}
+	{% if lastUpdateTime.failed == True %}
+  		<span>FAILED</span>
+	{% endif %}
+	</p>
+
 </div>
 {% endblock content %}

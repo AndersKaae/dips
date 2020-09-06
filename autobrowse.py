@@ -2,13 +2,14 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support.select import Select
 from secrets import *
+from webdriver_manager.chrome import ChromeDriverManager
 
 def selenium(url):
 	options = Options()
 	options.add_argument('--headless')
 	options.add_argument('--disable-gpu')
 	#options.add_experimental_option("detach", True)
-	browser = webdriver.Chrome('./chromedriver', chrome_options=options)
+	browser = webdriver.Chrome(ChromeDriverManager().install(), chrome_options=options)
 	browser.get(url=url)
 
 	# Finding the loging and password fields

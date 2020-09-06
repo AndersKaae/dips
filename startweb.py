@@ -35,7 +35,7 @@ def home():
 	previousMonthStart, previousMonthEnd  = PreviousMonthToDate(endDate)
 	previousMonthToDate = PeriodRefactor(str(previousMonthStart)[:10], str(previousMonthEnd)[:10])
 	lastThirtyDays = PeriodRefactor(str(endDate - timedelta(days=29))[:10], str(endDate)[:10])
-	lastweek = LastXDays(noOfDays)
+	lastweek = LastXDays(noOfDays-1)
 	previousLastThirtyDays = PeriodRefactor(str(datetime.today() - timedelta(days=59))[:10], str(datetime.today() - timedelta(days=30))[:10])
 	monthlyRevenue = LastXMonths(24)
 	return render_template('home.html', monthToDate = monthToDate, previousMonthToDate = previousMonthToDate, lastThirtyDays = lastThirtyDays, previousLastThirtyDays = previousLastThirtyDays, lastweek = lastweek, monthlyRevenue = monthlyRevenue[::-1], lastUpdateTime = GetLastUpdate(), formdata = formdata)

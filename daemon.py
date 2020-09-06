@@ -7,31 +7,37 @@ from datetime import datetime
 from googleAPI import Google_API_Main
 
 def ProcessReports():
-    with os.scandir('reports/') as entries:
+    failed = True
+    count = 0
+    with os.scandir('reports/') as entries: 
         for entry in entries:
+            count=+1
             fileandpath = os.path.join(os.path.dirname(__file__), "reports/", entry.name)
             try:
                 ReadData(fileandpath)
             except:
                 print(str(datetime.today().strftime("%d-%m-%Y %H:%M")) + ': Failed to read data.')
             os.remove(fileandpath)
+    if count > 0:
+        failed = False
+    return failed
 
 def RunDaemon():
     firstRun = True
     while True:
         if firstRun != True:
             print(str(datetime.today().strftime("%d-%m-%Y %H:%M")) + ': Waiting for 20 minutes to fetch report...')
-            time.sleep(1200)
+            time.sleep(1200) ## 1200
         print('Getting data with Selenium')
-        try:
-            selenium("https://payment.architrade.com/login/login.action")
-        except:
-            print(str(datetime.today().strftime("%d-%m-%Y %H:%M")) +': Selenium scrape failed.')
+        #try:
+        selenium("https://payment.architrade.com/login/login.action")
+        #except:
+        #    print(str(datetime.today().strftime("%d-%m-%Y %H:%M")) +': Selenium scrape failed.')
         print(str(datetime.today().strftime("%d-%m-%Y %H:%M")) + ': Waiting for 10 minutes for report to arrive...')
-        time.sleep(600)
-        ProcessReports()
+        time.sleep(600) ## 600
+        failed = ProcessReports()
         firstRun = False
-        SetLastUpdate(datetime.today().strftime("%d-%m-%Y %H:%M"))
+        SetLastUpdate(datetime.today().strftime("%d-%m-%Y %H:%M"), failed)
         Google_API_Main()
-#ProcessReports()
+
 RunDaemon()
