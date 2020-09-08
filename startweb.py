@@ -66,7 +66,8 @@ def upload_file():
 				csvFile.save(os.path.join(os.path.dirname(__file__), "temp/", csvFile.filename))
 				message = Markup("<span>Files saved</span>")
 				ReadData(os.path.join(os.path.dirname(__file__), "temp/", csvFile.filename))
-				SetLastUpdate(datetime.today().strftime("%d-%m-%Y %H:%M"))
+				failed = False
+				SetLastUpdate(datetime.today().strftime("%d-%m-%Y %H:%M"), failed)
 				return redirect(url_for('home'))
 			else:
 				message = Markup("<span>Invalid file type</span>")
