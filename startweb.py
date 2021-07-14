@@ -66,7 +66,8 @@ def upload_file():
 				csvFile.save(os.path.join(os.path.dirname(__file__), "temp/", csvFile.filename))
 				message = Markup("<span>Files saved</span>")
 				ReadData(os.path.join(os.path.dirname(__file__), "temp/", csvFile.filename))
-				SetLastUpdate(datetime.today().strftime("%d-%m-%Y %H:%M"))
+				failed = False
+				SetLastUpdate(datetime.today().strftime("%d-%m-%Y %H:%M"), failed)
 				return redirect(url_for('home'))
 			else:
 				message = Markup("<span>Invalid file type</span>")
@@ -90,4 +91,5 @@ def config():
 	return render_template('config.html', price_data = price_data)
 
 if __name__ == '__main__':
-	app.run(debug=True)
+    app.run(host="localhost", port=8000, debug=True, threaded=True)
+    app.secret_key = 'super secret key'

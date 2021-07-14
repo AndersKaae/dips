@@ -19,7 +19,7 @@ def ReadFile(filepath):
             line = line.decode("utf-8")
             line = line.strip('\r\n')
             linesInFile.append(line)  
-    return linesInFile   
+    return linesInFile
 
 def StartingLine(linesInFile):
     i = 1
@@ -33,35 +33,36 @@ def StartingLine(linesInFile):
     return line
 
 def ReformatDate(date):
-    newDate = date.split("/")
-    newDate[2] = newDate[2].split(" ")
-    newDate = newDate[2][0] + '-' + newDate[1] + '-' + newDate[0]
+    newDate = date.split("T")
     return newDate
 
 def ReadData(file):
     print(file)
+    # Gets list of lines in file
     linesInFile = ReadFile(file)
-    line = StartingLine(linesInFile)
+    #line = StartingLine(linesInFile)
     n = 1
     for item in linesInFile:
-        n += 1
-        if n > line:
-            item = item.split(",")
-            if 'captured' in file:
-                date = ReformatDate(item[6])
-                insertOrder(item[0], item[1], item[2], item[3], item[4], item[5], date, item[7])
-            if 'refunded' in file:
-                insertRefund(item[0], item[2])
+        item = item.split(",")
+        date = ReformatDate(item[1])
+        amount = ReformatAmount(item[2])
+        #           OrderNo, TransNo, Amount,  currency, CardType, autTime, date, aquirer
+        insertOrder(item[0], item[9], amount, item[3], item[7], "not used", datetime.strptime(date[0], '%Y-%m-%d'), item[5])
+
+def ReformatAmount(amount):
+    decimal = amount[-2:]
+    whole_number = amount[:-2]
+    return whole_number + "." + decimal
 
 def allowedFiles(filename):
     allowed = True
     if not "." in filename:
         allowed =  False
         return allowed
-    if not "captured" in filename and not "refunded" in filename:
+    if not "transactionsettlements" in filename:
         allowed =  False
         return allowed        
     ext = filename.rsplit(".", 1)[1]    
-    if ext.upper() != "TXT":
+    if ext.upper() != "CSV":
         allowed =  False
     return allowed

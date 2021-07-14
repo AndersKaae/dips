@@ -57,7 +57,7 @@ session.commit()
 def insertOrder(orderNo, transactionNo, amount, currency, cardType, authTime, fullfillTime, aquirer):
     isItUnique = session.query(Transactions).filter_by(orderNo = orderNo).first()
     if str(isItUnique) ==  "None":
-        transactions = Transactions(orderNo = orderNo, transactionNo = transactionNo, amount = amount, currency = currency, cardType = cardType, authTime = authTime, fullfillTime = datetime.strptime(fullfillTime, '%Y-%m-%d'), aquirer = aquirer)
+        transactions = Transactions(orderNo = orderNo, transactionNo = transactionNo, amount = amount, currency = currency, cardType = cardType, authTime = authTime, fullfillTime = fullfillTime, aquirer = aquirer)
         session.add(transactions)
         session.commit()
         session.close()
