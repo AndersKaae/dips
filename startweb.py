@@ -15,7 +15,10 @@ lastUpdateTime = ""
 @app.route("/", methods=['GET', 'POST'])
 def home():
 	formdata = 7
-
+	# Get argument from URL. If there is no argument we default to DK
+	country = request.args.get('country')
+	if country == None:
+		country = 'DK'
 	# This is needed to avoid error on first load since the form contains no data
 	if request.method == 'POST': 
 		formdata = request.form['days']
@@ -23,22 +26,23 @@ def home():
 		noOfDays = int(formdata)
 	else:
 		noOfDays = 7
+	
 	# Figuring out what the latest date with data is
-	if PeriodRefactor(str(datetime.today())[:10], str(datetime.today())[:10]) == 0:
+	if PeriodRefactor(str(datetime.today())[:10], str(datetime.today())[:10], country) == 0:
 		endDate = datetime.today() - timedelta(days=1)
 	else:
 		endDate = datetime.today()
 
 	# From current lastest date to the first in the month
 	startDate = endDate - timedelta(days=endDate.day - 1)
-	monthToDate = PeriodRefactor(str(startDate)[:10], str(endDate)[:10])
+	monthToDate = PeriodRefactor(str(startDate)[:10], str(endDate)[:10], country)
 	previousMonthStart, previousMonthEnd  = PreviousMonthToDate(endDate)
-	previousMonthToDate = PeriodRefactor(str(previousMonthStart)[:10], str(previousMonthEnd)[:10])
-	lastThirtyDays = PeriodRefactor(str(endDate - timedelta(days=29))[:10], str(endDate)[:10])
-	lastweek = LastXDays(noOfDays-1)
-	previousLastThirtyDays = PeriodRefactor(str(datetime.today() - timedelta(days=59))[:10], str(datetime.today() - timedelta(days=30))[:10])
-	monthlyRevenue = LastXMonths(24)
-	return render_template('home.html', monthToDate = monthToDate, previousMonthToDate = previousMonthToDate, lastThirtyDays = lastThirtyDays, previousLastThirtyDays = previousLastThirtyDays, lastweek = lastweek, monthlyRevenue = monthlyRevenue[::-1], lastUpdateTime = GetLastUpdate(), formdata = formdata)
+	previousMonthToDate = PeriodRefactor(str(previousMonthStart)[:10], str(previousMonthEnd)[:10], country)
+	lastThirtyDays = PeriodRefactor(str(endDate - timedelta(days=29))[:10], str(endDate)[:10], country)
+	lastweek = LastXDays(noOfDays-1, country)
+	previousLastThirtyDays = PeriodRefactor(str(datetime.today() - timedelta(days=59))[:10], str(datetime.today() - timedelta(days=30))[:10], country)
+	monthlyRevenue = LastXMonths(24, country)
+	return render_template('home.html', monthToDate = monthToDate, previousMonthToDate = previousMonthToDate, lastThirtyDays = lastThirtyDays, previousLastThirtyDays = previousLastThirtyDays, lastweek = lastweek, monthlyRevenue = monthlyRevenue[::-1], lastUpdateTime = GetLastUpdate(), formdata = formdata, country = country)
 
 @app.route("/products", methods=['GET', 'POST'])
 def products():
@@ -77,7 +81,7 @@ def upload_file():
 
 @app.route("/top", methods=["GET", "POST"])
 def top():
-	result = TopX()
+	result = TopX("DK")
 	return render_template('top.html', toplist = result)
 
 @app.route("/config", methods=['GET', 'POST'])

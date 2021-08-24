@@ -19,11 +19,11 @@ def LastYears(NumberofYears, today):
         i += 1
     return(revenuePerYear)
 
-def LastXDays(NumberOfDays):
+def LastXDays(NumberOfDays, country):
     temp_revenue_per_day = []
     final_revenue_per_day = []
     start_day = str(datetime.today() - timedelta(days=NumberOfDays))[:10]
-    data = PurePeriod(start_day, datetime.today())
+    data = PurePeriod(start_day, datetime.today(), country)
     daily_amount = 0
     for item in data:
         if str(start_day) == str(item.fullfillTime):
@@ -59,14 +59,14 @@ def PreviousMonthToDate(endDate):
     endDate = startDate + timedelta(days=day - 1)
     return startDate, endDate
 
-def LastXMonths(NumberOfMonths):
+def LastXMonths(NumberOfMonths, country):
     monthPairs = []
     tempMonthPair = []
     monthMoney = []
     # Setting up first month which might be a partial month
     endDate = datetime.today()
     # Checking if endDate revenue is > 0
-    if PeriodRefactor(str(endDate)[:10], str(endDate)[:10]) == 0:
+    if PeriodRefactor(str(endDate)[:10], str(endDate)[:10], country) == 0:
         endDate = endDate - timedelta(days=1)
     startDate = datetime.today() - timedelta(days=datetime.today().day - 1)
     tempMonthPair.append(str(startDate)[:10])
@@ -87,12 +87,12 @@ def LastXMonths(NumberOfMonths):
     for item in monthPairs:
         tempMonthPair = []
         tempMonthPair.append(datetime.strptime(item[0], '%Y-%m-%d').strftime("%B %Y"))
-        tempMonthPair.append(PeriodRefactor(item[0], item[1]))
+        tempMonthPair.append(PeriodRefactor(item[0], item[1], country))
         monthMoney.append(tempMonthPair)
     return monthMoney
 
-def TopX():
-    data = LastXDays(10000)
+def TopX(country):
+    data = LastXDays(10000, country)
     data.sort()
     last_10_slice = slice(-10, None)
     data = data[last_10_slice]

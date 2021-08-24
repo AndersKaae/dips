@@ -40,14 +40,20 @@ def ReadData(file):
     print(file)
     # Gets list of lines in file
     linesInFile = ReadFile(file)
-    #line = StartingLine(linesInFile)
     n = 1
-    for item in linesInFile:
-        item = item.split(",")
-        date = ReformatDate(item[1])
-        amount = ReformatAmount(item[2])
-        #           OrderNo, TransNo, Amount,  currency, CardType, autTime, date, aquirer
-        insertOrder(item[0], item[9], amount, item[3], item[7], "not used", datetime.strptime(date[0], '%Y-%m-%d'), item[5])
+    # Checks if any lines in file
+    if len(linesInFile) > 0:
+        # Checks if Danish or Swedish file
+        country = linesInFile[0].split(",")[3]
+        # Removed "" from the string
+        country = country.replace('"', '')
+
+        for item in linesInFile:
+            item = item.split(",")
+            date = ReformatDate(item[1])
+            amount = ReformatAmount(item[2])
+            #           OrderNo, TransNo, Amount,  currency, CardType, autTime, date, aquirer
+            insertOrder(item[0], item[9], amount, item[3], item[7], "not used", datetime.strptime(date[0], '%Y-%m-%d'), item[5], country)
 
 def ReformatAmount(amount):
     decimal = amount[-2:]

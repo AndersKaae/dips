@@ -19,6 +19,17 @@ class Transactions(Base):
 	fullfillTime = Column(Date, nullable=True)
 	aquirer = Column(String(30), nullable=False)
 
+class TransactionsSE(Base):
+	__tablename__ = 'transactions_se'
+	orderNo = Column(String(100), primary_key=True)
+	transactionNo = Column(String(30), nullable=False)
+	amount = Column(Float, nullable=False)
+	currency = Column(String(30), nullable=False)
+	cardType = Column(String(50), nullable=False)
+	authTime = Column(String(200), nullable=False)
+	fullfillTime = Column(Date, nullable=True)
+	aquirer = Column(String(30), nullable=False)
+
 class Refunds(Base):
 	__tablename__ = 'refunds'
 	orderNo = Column(String(100), primary_key=True)
@@ -54,10 +65,16 @@ session = Session()
 Base.metadata.create_all(engine)
 session.commit()
 
-def insertOrder(orderNo, transactionNo, amount, currency, cardType, authTime, fullfillTime, aquirer):
-    isItUnique = session.query(Transactions).filter_by(orderNo = orderNo).first()
+def insertOrder(orderNo, transactionNo, amount, currency, cardType, authTime, fullfillTime, aquirer, country):
+    if country == "DKK":
+        isItUnique = session.query(Transactions).filter_by(orderNo = orderNo).first()
+    if country == "SEK":
+        isItUnique = session.query(TransactionsSE).filter_by(orderNo = orderNo).first()
     if str(isItUnique) ==  "None":
-        transactions = Transactions(orderNo = orderNo, transactionNo = transactionNo, amount = amount, currency = currency, cardType = cardType, authTime = authTime, fullfillTime = fullfillTime, aquirer = aquirer)
+        if country == "DKK":
+            transactions = Transactions(orderNo = orderNo, transactionNo = transactionNo, amount = amount, currency = currency, cardType = cardType, authTime = authTime, fullfillTime = fullfillTime, aquirer = aquirer)
+        if country == "SEK":
+            transactions = TransactionsSE(orderNo = orderNo, transactionNo = transactionNo, amount = amount, currency = currency, cardType = cardType, authTime = authTime, fullfillTime = fullfillTime, aquirer = aquirer)
         session.add(transactions)
         session.commit()
         session.close()
@@ -88,15 +105,21 @@ def insertRefund(orderNo, amount):
         session.commit()
         session.close()
 
-def PeriodRefactor(fromDate, toDate):
-    query = session.query(Transactions).filter(Transactions.fullfillTime.between(fromDate, toDate))
+def PeriodRefactor(fromDate, toDate, country):
+    if country == "DK":
+        query = session.query(Transactions).filter(Transactions.fullfillTime.between(fromDate, toDate))
+    if country == "SE":
+        query = session.query(TransactionsSE).filter(TransactionsSE.fullfillTime.between(fromDate, toDate))
     sum = 0
     for i in query:
         sum = sum + float(i.amount)
     return sum
 
-def PurePeriod(fromDate, toDate):
-    query = session.query(Transactions).filter(Transactions.fullfillTime.between(fromDate, toDate))
+def PurePeriod(fromDate, toDate, country):
+    if country == "DK":
+        query = session.query(Transactions).filter(Transactions.fullfillTime.between(fromDate, toDate))
+    if country == "SE":
+        query = session.query(TransactionsSE).filter(TransactionsSE.fullfillTime.between(fromDate, toDate))
     return query
 
 def ProductsPrDay(days):
