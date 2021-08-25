@@ -107,9 +107,9 @@ def insertRefund(orderNo, amount):
 
 def PeriodRefactor(fromDate, toDate, country):
     if country == "DK":
-        query = session.query(Transactions).filter(Transactions.fullfillTime.between(fromDate, toDate))
+        query = session.query(Transactions).filter(Transactions.fullfillTime.between(fromDate, toDate)).order_by(asc(Transactions.fullfillTime))
     if country == "SE":
-        query = session.query(TransactionsSE).filter(TransactionsSE.fullfillTime.between(fromDate, toDate))
+        query = session.query(TransactionsSE).filter(TransactionsSE.fullfillTime.between(fromDate, toDate)).order_by(asc(TransactionsSE.fullfillTime))
     sum = 0
     for i in query:
         sum = sum + float(i.amount)
@@ -117,9 +117,9 @@ def PeriodRefactor(fromDate, toDate, country):
 
 def PurePeriod(fromDate, toDate, country):
     if country == "DK":
-        query = session.query(Transactions).filter(Transactions.fullfillTime.between(fromDate, toDate))
+        query = session.query(Transactions).filter(Transactions.fullfillTime.between(fromDate, toDate)).order_by(asc(Transactions.fullfillTime))
     if country == "SE":
-        query = session.query(TransactionsSE).filter(TransactionsSE.fullfillTime.between(fromDate, toDate))
+        query = session.query(TransactionsSE).filter(TransactionsSE.fullfillTime.between(fromDate, toDate)).order_by(asc(TransactionsSE.fullfillTime))
     return query
 
 def ProductsPrDay(days):
