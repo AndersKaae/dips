@@ -1,3 +1,4 @@
+from sqlalchemy.sql.functions import count
 from database import *
 import configparser
 from os import listdir
@@ -50,10 +51,19 @@ def ReadData(file):
 
         for item in linesInFile:
             item = item.split(",")
+            item = RemoveQuotes(item)
             date = ReformatDate(item[1])
             amount = ReformatAmount(item[2])
             #           OrderNo, TransNo, Amount,  currency, CardType, autTime, date, aquirer
             insertOrder(item[0], item[9], amount, item[3], item[7], "not used", datetime.strptime(date[0], '%Y-%m-%d'), item[5], country)
+
+def RemoveQuotes(line):
+    lenght_of_list = len(line)
+    counter = 0
+    while counter < lenght_of_list:
+        line[counter] = line[counter].replace('"', '')
+        counter +=1
+    return line
 
 def ReformatAmount(amount):
     decimal = amount[-2:]

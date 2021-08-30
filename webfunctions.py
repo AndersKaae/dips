@@ -26,18 +26,22 @@ def LastXDays(NumberOfDays, country):
     data = PurePeriod(start_day, datetime.today(), country)
     daily_amount = 0
     for item in data:
+        # This line determines if the item is the first of a new day or in the current day. If start_day == item.fullfillTime we are in the current day.
         if str(start_day) == str(item.fullfillTime):
             daily_amount = daily_amount + float(item.amount)
             latest_day = item.fullfillTime
         else:
+            # This line is a new day. We save our daily amounts etc.
             temp_revenue_per_day.append(daily_amount)
             formatted_day = datetime.strptime(str(start_day), '%Y-%m-%d')
             temp_revenue_per_day.append(formatted_day.strftime("%A, %d %b %Y"))
             final_revenue_per_day.append(temp_revenue_per_day)
+            # Day is reset
             temp_revenue_per_day = []
             daily_amount = 0
             daily_amount = daily_amount + float(item.amount)
             start_day = item.fullfillTime
+            latest_day = item.fullfillTime
 
     # This is for the last day
     temp_revenue_per_day.append(daily_amount)
