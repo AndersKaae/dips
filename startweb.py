@@ -84,8 +84,9 @@ def upload_file():
 
 @app.route("/top", methods=["GET", "POST"])
 def top():
-	result = TopX("DK")
-	return render_template('top.html', toplist = result)
+	resultDK = TopX("DK")
+	resultSE = TopX("SE")
+	return render_template('top.html', toplistDK = resultDK, toplistSE = resultSE)
 
 @app.route("/config", methods=['GET', 'POST'])
 def config():

@@ -11,9 +11,9 @@
       var data = google.visualization.arrayToDataTable([
         ["Day", "Revenue", { role: "style" } ],
 
-        {% for item in toplist %}		  
-            ["{{ item[1] }}", {{ item[0] }}, "green"]
-            {% if loop.index < toplist|length %},{% endif %}
+        {% for item in toplistDK %}		  
+            ["{{ item[1] }}", {{ item[0] }}, "red"]
+            {% if loop.index < toplistDK|length %},{% endif %}
         {% endfor %}
 
       ]);
@@ -27,7 +27,7 @@
                        2]);
 
       var options = {
-        title: "Top 10 days of revenue",
+        title: "Top 10 days of revenue Denmark",
         height: 400,
         bar: {groupWidth: "95%"},
         legend: { position: "none" },
@@ -38,10 +38,43 @@
       chart.draw(view, options);
   }
 
+  google.charts.setOnLoadCallback(dailyRevenueSe);
+
+function dailyRevenueSe() {
+  var data = google.visualization.arrayToDataTable([
+    ["Day", "Revenue", { role: "style" } ],
+
+    {% for item in toplistSE %}		  
+        ["{{ item[1] }}", {{ item[0] }}, "blue"]
+        {% if loop.index < toplistSE|length %},{% endif %}
+    {% endfor %}
+
+  ]);
+
+  var view = new google.visualization.DataView(data);
+  view.setColumns([0, 1,
+                   { calc: "stringify",
+                     sourceColumn: 1,
+                     type: "string",
+                     role: "annotation" },
+                   2]);
+
+  var options = {
+    title: "Top 10 days of revenue Sweden",
+    height: 400,
+    bar: {groupWidth: "95%"},
+    legend: { position: "none" },
+    vAxis: {minValue: 0}
+  }
+  ;
+  var chart = new google.visualization.ColumnChart(document.getElementById("dailyRevenue_div_se"));
+  chart.draw(view, options);
+}
+
   </script>
 
   <div id="dailyRevenue_div" style="width: 100 %; height: 300px;"></div>
 
-</div>
+  <div id="dailyRevenue_div_se" style="width: 100 %; height: 300px;">sasa</div>
 
 {% endblock content %}
