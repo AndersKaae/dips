@@ -110,6 +110,10 @@
 			<td>{{ (((lastThirtyDays - previousLastThirtyDays) / previousLastThirtyDays)*100)|round(2) }} %</td>
 			<td>{{ "{:,.2f}".format(previousLastThirtyDays) }} kr.</td>
 		</tr>
+		<tr>
+			<td>Projected revenue:</td>
+			<td>{{ "{:,.2f}".format(projectedRevenue) }} kr.</td>
+		</tr>
 	</table>
 
 	<p style="text-align: right;font-style: italic;">Last updated: {{ lastUpdateTime.date }}

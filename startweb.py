@@ -45,7 +45,8 @@ def home():
 	lastweek = LastXDays(noOfDays, country)
 	previousLastThirtyDays = PeriodRefactor(str(datetime.today() - timedelta(days=59))[:10], str(datetime.today() - timedelta(days=30))[:10], country)
 	monthlyRevenue = LastXMonths(24, country)
-	return render_template('home.html', monthToDate = monthToDate, previousMonthToDate = previousMonthToDate, lastThirtyDays = lastThirtyDays, previousLastThirtyDays = previousLastThirtyDays, lastweek = lastweek, monthlyRevenue = monthlyRevenue[::-1], lastUpdateTime = GetLastUpdate(), formdata = formdata, country = country)
+	projectedRevenue = round((monthToDate / datetime.today().day) * DaysThisMonth(), 2)
+	return render_template('home.html', monthToDate = monthToDate, previousMonthToDate = previousMonthToDate, lastThirtyDays = lastThirtyDays, previousLastThirtyDays = previousLastThirtyDays, lastweek = lastweek, monthlyRevenue = monthlyRevenue[::-1], lastUpdateTime = GetLastUpdate(), formdata = formdata, country = country, projectedRevenue = projectedRevenue)
 
 @app.route("/products", methods=['GET', 'POST'])
 def products():

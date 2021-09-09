@@ -101,3 +101,14 @@ def TopX(country):
     last_10_slice = slice(-10, None)
     data = data[last_10_slice]
     return data
+
+def DaysThisMonth():
+    # Getting month and year
+    next_month = datetime.today().month + 1
+    current_year = datetime.today().year
+    # Creating a string and converting to date
+    date_time_str = str(current_year) + '-' + str(next_month) + '-01'
+    # Substracting 1 day to get the number of days
+    date_time_obj = datetime.strptime(date_time_str, '%Y-%m-%d') - timedelta(days=1)
+    # Getting and returning number of days
+    return date_time_obj.day
