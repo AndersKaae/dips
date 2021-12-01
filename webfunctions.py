@@ -104,8 +104,11 @@ def TopX(country):
 
 def DaysThisMonth():
     # Getting month and year
-    next_month = datetime.today().month + 1
     current_year = datetime.today().year
+    next_month = datetime.today().month + 1
+    if next_month == 13:
+        next_month = 1
+        current_year +=1
     # Creating a string and converting to date
     date_time_str = str(current_year) + '-' + str(next_month) + '-01'
     # Substracting 1 day to get the number of days
