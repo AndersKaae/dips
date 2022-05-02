@@ -101,7 +101,11 @@
 		<tr>
 			<td>Month to date:</td>  
 			<td>{{ "{:,.2f}".format(monthToDate) }} kr.</td>
-			<td>{{ (((monthToDate - previousMonthToDate) / previousMonthToDate)*100)|round(2) }} %</td>
+			{% if previousMonthToDate != 0 %}
+				<td>{{ (((monthToDate - previousMonthToDate) / previousMonthToDate)*100)|round(2) }} %</td>
+			{% else %}
+				<td>&#8734;</td>
+			{% endif %}
 			<td>{{ "{:,.2f}".format(previousMonthToDate) }} kr.</td>
 		</tr>
 		<tr>
