@@ -4,7 +4,7 @@ from sqlalchemy.orm import sessionmaker
 from decimal import Decimal
 from datetime import datetime, timedelta
 
-engine = create_engine('sqlite:///dips1.db', connect_args={'check_same_thread': False})
+engine = create_engine('mysql+pymysql://root:6UtdCPZastbqjZFmhDkX@containers-us-west-36.railway.app:7703/railway')
 
 Base = declarative_base()
 
