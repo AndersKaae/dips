@@ -63,13 +63,6 @@
 		  height: 400,
 		  bar: {groupWidth: "90%"},
 		  legend: { position: "none" },
-				vAxes: {
-      			0: {
-        			title: 'Temperatura',
-        			viewWindow: {
-          				min: 0
-        			}
-      				},
 		};
 		var chart = new google.visualization.ColumnChart(document.getElementById("monthlyRevenue_div"));
 		chart.draw(view, options);
