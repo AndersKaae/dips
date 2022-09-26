@@ -76,7 +76,10 @@ def insertOrder(orderNo, transactionNo, amount, currency, cardType, authTime, fu
         if country == "SEK":
             transactions = TransactionsSE(orderNo = orderNo, transactionNo = transactionNo, amount = amount, currency = currency, cardType = cardType, authTime = authTime, fullfillTime = fullfillTime, aquirer = aquirer)
         session.add(transactions)
-        session.commit()
+        try:
+            session.commit()
+        except:
+            session.rollback()
         session.close()
 
 def GetLastUpdate():
@@ -92,7 +95,11 @@ def SetLastUpdate(date, failed):
     else:
         lastUpdate = LastUpdate(date = date, failed = failed)
         session.add(lastUpdate)
-    session.commit()
+        try:
+            session.commit()
+        except:
+            session.rollback()
+        session.close()
 
 def insertRefund(orderNo, amount):
     isItUnique = session.query(Refunds).filter_by(orderNo = orderNo).first()
@@ -102,7 +109,10 @@ def insertRefund(orderNo, amount):
         order = session.query(Transactions).filter_by(orderNo = orderNo).first()
         order.amount = str(Decimal(order.amount) - Decimal(amount))
         session.add(refunds)
-        session.commit()
+        try:
+            session.commit()
+        except:
+            session.rollback()
         session.close()
 
 def PeriodRefactor(fromDate, toDate, country):
@@ -138,13 +148,16 @@ def InserGoogleData(google_data):
         if str(isItUnique) ==  "None":
             data = GA_medium_device(transactionNo = google_data.orderid, medium = google_data.medium, device = google_data.device, date = google_data.date)
             session.add(data)
-            session.commit()
+            
     else:
         isItUnique = session.query(GA_product).filter_by(transactionNo = google_data.orderid).first()
         if str(isItUnique) ==  "None" and google_data.product.isdigit() == False:
             data = GA_product(transactionNo = google_data.orderid, product = google_data.product, date = google_data.date)
             session.add(data)
-            session.commit()
+    try:
+        session.commit()
+    except:
+        session.rollback()
     session.close()
 
 def DeleteGoogleData():
@@ -195,7 +208,10 @@ def PopulatePriceTable():
         if str(isItUnique) ==  "None":
             data = GA_prices(product = name[0], price = "0")
             session.add(data)
-    session.commit()
+    try:
+        session.commit()
+    except:
+        session.rollback()
     session.close()
 
 def UpdatePriceTable(data):
@@ -204,7 +220,10 @@ def UpdatePriceTable(data):
     for item in data:
         data = GA_prices(product = item[0], price = item[1])
         session.add(data)
-    session.commit()
+    try:
+        session.commit()
+    except:
+        session.rollback()
     session.close()
 
 def QueryPriceTable():
