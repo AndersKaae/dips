@@ -111,12 +111,11 @@ def reepayhook():
 			json_data = GetInvoiceDataFromAPI(invoice_no, country)
 			try:
 				orderNo, transactionNo, amount, currency, cardType, authTime, fullfillTime, aquirer = ParseInvoiceData(json_data)
+				insertOrder(orderNo, transactionNo, amount, currency, cardType, authTime, fullfillTime, aquirer, country)
+				print('Data updated with webhook')
+				SetLastUpdate(datetime.today().strftime("%d-%m-%Y %H:%M"), False)
 			except:
 				print('Failed to parse invoice_no: ' + invoice_no)
-
-			insertOrder(orderNo, transactionNo, amount, currency, cardType, authTime, fullfillTime, aquirer, country)
-			print('Data updated with webhook')
-			SetLastUpdate(datetime.today().strftime("%d-%m-%Y %H:%M"), False)
 	return "Data recieved"
 
 if __name__ == '__main__':
