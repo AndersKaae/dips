@@ -5,8 +5,7 @@ from getdata import *
 import os
 from database import PeriodRefactor, insertOrder
 from productsFunctions import GetproductsPrDay, CreateProductPrDayString
-import requests
-import json
+
 
 app = Flask(__name__)
 app.secret_key = "d4bb81b1-2038-4f56-8bec-9e35472c4826"
@@ -109,29 +108,12 @@ def reepayhook():
 
 			# Constructing URL and retrieving data
 			invoice_no = request.json['invoice']
-			url = 'https://api.reepay.com/v1/invoice/' + str(invoice_no)
-			if country == 'DKK':
-				password = 'priv_9eab23c963aaf3c64f5f85504e78aaeb'
-			if country == 'SEK':
-				password = 'priv_40f2ab112fedc2ccc485efafc84ba068'
-			r = requests.get(url, auth=(password, ''))
-			
-			# Parsing date and saving relevant parts to variables
-			json_data = json.loads(r.text)
-			orderNo = json_data['handle']
-			transactionNo = orderNo
-			amount = ReformatAmount(str(json_data['amount']))
-			currency = json_data['currency']
-			if 'card_transaction' in r.text:
-				key = 'card_transaction'
-			else:
-				key = 'mpo_transaction'
+			json_data = GetInvoiceDataFromAPI(invoice_no, country)
+			try:
+				orderNo, transactionNo, amount, currency, cardType, authTime, fullfillTime, aquirer = ParseInvoiceData(json_data)
+			except:
+				print('Failed to parse invoice_no: ' + invoice_no)
 
-			cardType = json_data['transactions'][0][key]['card_type']
-			authTime = 'not used'
-			fullfillTime = datetime.strptime(str(json_data['settled'])[0:10], '%Y-%m-%d')
-			aquirer = json_data['transactions'][0][key]['provider']
-		
 			insertOrder(orderNo, transactionNo, amount, currency, cardType, authTime, fullfillTime, aquirer, country)
 			print('Data updated with webhook')
 			SetLastUpdate(datetime.today().strftime("%d-%m-%Y %H:%M"), False)

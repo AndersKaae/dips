@@ -66,6 +66,7 @@ Base.metadata.create_all(engine)
 session.commit()
 
 def insertOrder(orderNo, transactionNo, amount, currency, cardType, authTime, fullfillTime, aquirer, country):
+    session = Session()
     if country == "DKK":
         isItUnique = session.query(Transactions).filter_by(orderNo = orderNo).first()
     if country == "SEK":
@@ -83,8 +84,9 @@ def insertOrder(orderNo, transactionNo, amount, currency, cardType, authTime, fu
         session.close()
 
 def GetLastUpdate():
-	query = session.query(LastUpdate).first()
-	return query
+    query = session.query(LastUpdate).first()
+    session.close()
+    return query
 
 def SetLastUpdate(date, failed):
     query = session.query(LastUpdate).first()
@@ -99,7 +101,7 @@ def SetLastUpdate(date, failed):
             session.commit()
         except:
             session.rollback()
-        session.close()
+    session.close()
 
 def insertRefund(orderNo, amount):
     isItUnique = session.query(Refunds).filter_by(orderNo = orderNo).first()
@@ -113,7 +115,7 @@ def insertRefund(orderNo, amount):
             session.commit()
         except:
             session.rollback()
-        session.close()
+    session.close()
 
 def PeriodRefactor(fromDate, toDate, country):
     if country == "DK":
@@ -123,6 +125,7 @@ def PeriodRefactor(fromDate, toDate, country):
     sum = 0
     for i in query:
         sum = sum + float(i.amount)
+    session.close()
     return sum
 
 def PurePeriod(fromDate, toDate, country):
@@ -130,6 +133,7 @@ def PurePeriod(fromDate, toDate, country):
         query = session.query(Transactions).filter(Transactions.fullfillTime.between(fromDate, toDate)).order_by(asc(Transactions.fullfillTime))
     if country == "SE":
         query = session.query(TransactionsSE).filter(TransactionsSE.fullfillTime.between(fromDate, toDate)).order_by(asc(TransactionsSE.fullfillTime))
+    session.close()
     return query
 
 def ProductsPrDay(days):
@@ -139,6 +143,7 @@ def ProductsPrDay(days):
     query = session.query(GA_product).filter(GA_product.date.between(fromDate, toDate)).order_by(asc(GA_product.date))
     # Getting unique names
     product_names = session.query(GA_product.product).filter(GA_product.date.between(fromDate, toDate)).distinct()
+    session.close()
     return query, product_names
 
 def InserGoogleData(google_data):
@@ -197,6 +202,7 @@ def GetDateRangeForMissingGoogleData():
         to_gap.append(date_range_google[1])
         to_gap.append(date_range_transactions[1])
         gap_list.append(to_gap)    
+    
     return gap_list
 
 def PopulatePriceTable():

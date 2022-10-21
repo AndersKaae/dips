@@ -2,6 +2,9 @@ import sqlite3
 from decimal import Decimal
 from datetime import datetime, timedelta
 from database import *
+import requests
+import json
+from getdata import ReformatAmount
 
 def LastYears(NumberofYears, today):
     revenuePerYear = []
@@ -115,3 +118,31 @@ def DaysThisMonth():
     date_time_obj = datetime.strptime(date_time_str, '%Y-%m-%d') - timedelta(days=1)
     # Getting and returning number of days
     return date_time_obj.day
+
+def GetInvoiceDataFromAPI(invoice_no, country):
+    url = 'https://api.reepay.com/v1/invoice/' + str(invoice_no)
+    if country == 'DKK':
+        password = 'priv_9eab23c963aaf3c64f5f85504e78aaeb'
+    if country == 'SEK':
+        password = 'priv_40f2ab112fedc2ccc485efafc84ba068'
+    r = requests.get(url, auth=(password, ''))
+    json_data = json.loads(r.text)
+    return json_data
+
+def ParseInvoiceData(json_data):
+    orderNo = json_data['handle']
+    transactionNo = orderNo
+    amount = ReformatAmount(str(json_data['amount']))
+    currency = json_data['currency']
+    if 'card_transaction' in str(json_data):
+        key = 'card_transaction'
+    else:
+        key = 'mpo_transaction'
+    cardType = json_data['transactions'][0][key]['card_type']
+    authTime = 'not used'
+    fullfillTime = datetime.strptime(str(json_data['settled'])[0:10], '%Y-%m-%d')
+    aquirer = json_data['transactions'][0][key]['provider']
+    return orderNo, transactionNo, amount, currency, cardType, authTime, fullfillTime, aquirer
+
+json_data = GetInvoiceDataFromAPI(447737, 'DKK')
+ParseInvoiceData(json_data)
