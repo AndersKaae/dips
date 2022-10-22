@@ -136,10 +136,16 @@ def ParseInvoiceData(json_data):
     currency = json_data['currency']
     if 'card_transaction' in str(json_data):
         key = 'card_transaction'
+        cardType = json_data['transactions'][-1]['']['card_type']
     else:
         key = 'mpo_transaction'
-    cardType = json_data['transactions'][-1][key]['card_type']
+        cardType = json_data['transactions'][-1]['mpo_transaction']['transaction_card_type']
     authTime = 'not used'
     fullfillTime = datetime.strptime(str(json_data['settled'])[0:10], '%Y-%m-%d')
     aquirer = json_data['transactions'][-1][key]['provider']
     return orderNo, transactionNo, amount, currency, cardType, authTime, fullfillTime, aquirer
+
+#country = 'DKK'
+#json_data = GetInvoiceDataFromAPI(448228, country)
+#orderNo, transactionNo, amount, currency, cardType, authTime, fullfillTime, aquirer = ParseInvoiceData(json_data)
+#insertOrder(orderNo, transactionNo, amount, currency, cardType, authTime, fullfillTime, aquirer, country)
