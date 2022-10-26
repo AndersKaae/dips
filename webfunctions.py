@@ -146,6 +146,6 @@ def ParseInvoiceData(json_data):
     return orderNo, transactionNo, amount, currency, cardType, authTime, fullfillTime, aquirer
 
 #country = 'DKK'
-#json_data = GetInvoiceDataFromAPI(448759, country)
+#json_data = GetInvoiceDataFromAPI(451049, country)
 #orderNo, transactionNo, amount, currency, cardType, authTime, fullfillTime, aquirer = ParseInvoiceData(json_data)
 #insertOrder(orderNo, transactionNo, amount, currency, cardType, authTime, fullfillTime, aquirer, country)
