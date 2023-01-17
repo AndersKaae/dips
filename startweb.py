@@ -16,19 +16,22 @@ lastUpdateTime = ""
 
 @app.route("/", methods=['GET', 'POST'])
 def home():
-	formdata = 7
 	# Get argument from URL. If there is no argument we default to DK
 	country = request.args.get('country')
-	if country == None:
-		country = 'DK'
+	noOfDays = request.args.get('days')
+	if noOfDays != None:
+		noOfDays = int(noOfDays)
+	else:
+		noOfDays = 7
+
 	# This is needed to avoid error on first load since the form contains no data
 	if request.method == 'POST': 
 		formdata = request.form['days']
-	if formdata != "":
-		noOfDays = int(formdata)
-	else:
-		noOfDays = 7
-	
+		return redirect("/?country=DK&days=" + formdata)
+
+	if country == None:
+		return redirect("/?country=DK&days=" + str(noOfDays))
+
 	# Figuring out what the latest date with data is
 	if PeriodRefactor(str(datetime.today())[:10], str(datetime.today())[:10], country) == 0:
 		endDate = datetime.today() - timedelta(days=1)
@@ -45,7 +48,7 @@ def home():
 	previousLastThirtyDays = PeriodRefactor(str(datetime.today() - timedelta(days=59))[:10], str(datetime.today() - timedelta(days=30))[:10], country)
 	monthlyRevenue = LastXMonths(24, country)
 	projectedRevenue = round((monthToDate / datetime.today().day) * DaysThisMonth(), 2)
-	return render_template('home.html', monthToDate = monthToDate, previousMonthToDate = previousMonthToDate, lastThirtyDays = lastThirtyDays, previousLastThirtyDays = previousLastThirtyDays, lastweek = lastweek, monthlyRevenue = monthlyRevenue[::-1], lastUpdateTime = GetLastUpdate(), formdata = formdata, country = country, projectedRevenue = projectedRevenue)
+	return render_template('home.html', monthToDate = monthToDate, previousMonthToDate = previousMonthToDate, lastThirtyDays = lastThirtyDays, previousLastThirtyDays = previousLastThirtyDays, lastweek = lastweek, monthlyRevenue = monthlyRevenue[::-1], lastUpdateTime = GetLastUpdate(), formdata = noOfDays, country = country, projectedRevenue = projectedRevenue)
 
 @app.route("/products", methods=['GET', 'POST'])
 def products():
@@ -86,7 +89,8 @@ def upload_file():
 def top():
 	resultDK = TopX("DK")
 	resultSE = TopX("SE")
-	return render_template('top.html', toplistDK = resultDK, toplistSE = resultSE)
+	resultNO = TopX("NO")
+	return render_template('top.html', toplistDK = resultDK, toplistSE = resultSE, toplistNO = resultNO)
 
 @app.route("/config", methods=['GET', 'POST'])
 def config():

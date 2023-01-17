@@ -30,6 +30,17 @@ class TransactionsSE(Base):
 	fullfillTime = Column(Date, nullable=True)
 	aquirer = Column(String(30), nullable=False)
 
+class TransactionsNO(Base):
+	__tablename__ = 'transactions_no'
+	orderNo = Column(String(100), primary_key=True)
+	transactionNo = Column(String(30), nullable=False)
+	amount = Column(Float, nullable=False)
+	currency = Column(String(30), nullable=False)
+	cardType = Column(String(50), nullable=False)
+	authTime = Column(String(200), nullable=False)
+	fullfillTime = Column(Date, nullable=True)
+	aquirer = Column(String(30), nullable=False)
+
 class Refunds(Base):
 	__tablename__ = 'refunds'
 	orderNo = Column(String(100), primary_key=True)
@@ -71,11 +82,15 @@ def insertOrder(orderNo, transactionNo, amount, currency, cardType, authTime, fu
         isItUnique = session.query(Transactions).filter_by(orderNo = orderNo).first()
     if country == "SEK":
         isItUnique = session.query(TransactionsSE).filter_by(orderNo = orderNo).first()
+    if country == "NOK":
+        isItUnique = session.query(TransactionsNO).filter_by(orderNo = orderNo).first()
     if str(isItUnique) ==  "None":
         if country == "DKK":
             transactions = Transactions(orderNo = orderNo, transactionNo = transactionNo, amount = amount, currency = currency, cardType = cardType, authTime = authTime, fullfillTime = fullfillTime, aquirer = aquirer)
         if country == "SEK":
             transactions = TransactionsSE(orderNo = orderNo, transactionNo = transactionNo, amount = amount, currency = currency, cardType = cardType, authTime = authTime, fullfillTime = fullfillTime, aquirer = aquirer)
+        if country == "NOK":
+            transactions = TransactionsNO(orderNo = orderNo, transactionNo = transactionNo, amount = amount, currency = currency, cardType = cardType, authTime = authTime, fullfillTime = fullfillTime, aquirer = aquirer)
         session.add(transactions)
         try:
             session.commit()
@@ -123,6 +138,8 @@ def PeriodRefactor(fromDate, toDate, country):
             query = session.query(Transactions).filter(Transactions.fullfillTime.between(fromDate, toDate)).order_by(asc(Transactions.fullfillTime))
         if country == "SE":
             query = session.query(TransactionsSE).filter(TransactionsSE.fullfillTime.between(fromDate, toDate)).order_by(asc(TransactionsSE.fullfillTime))
+        if country == "NO":
+            query = session.query(TransactionsNO).filter(TransactionsNO.fullfillTime.between(fromDate, toDate)).order_by(asc(TransactionsNO.fullfillTime))
         sum = 0
         for i in query:
             sum = sum + float(i.amount)
@@ -137,6 +154,8 @@ def PurePeriod(fromDate, toDate, country):
         query = session.query(Transactions).filter(Transactions.fullfillTime.between(fromDate, toDate)).order_by(asc(Transactions.fullfillTime))
     if country == "SE":
         query = session.query(TransactionsSE).filter(TransactionsSE.fullfillTime.between(fromDate, toDate)).order_by(asc(TransactionsSE.fullfillTime))
+    if country == "NO":
+        query = session.query(TransactionsNO).filter(TransactionsNO.fullfillTime.between(fromDate, toDate)).order_by(asc(TransactionsNO.fullfillTime))    
     session.close()
     return query
 
