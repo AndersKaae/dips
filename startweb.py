@@ -27,7 +27,8 @@ def home():
 	# This is needed to avoid error on first load since the form contains no data
 	if request.method == 'POST': 
 		formdata = request.form['days']
-		return redirect("/?country=DK&days=" + formdata)
+		country = request.form['country']
+		return redirect("/?country=" + country +"&days=" + formdata)
 
 	if country == None:
 		return redirect("/?country=DK&days=" + str(noOfDays))
