@@ -129,6 +129,8 @@ def GetInvoiceDataFromAPI(invoice_no, country):
         password = 'priv_9eab23c963aaf3c64f5f85504e78aaeb'
     if country == 'SEK':
         password = 'priv_40f2ab112fedc2ccc485efafc84ba068'
+    if country == 'NOK':
+        password = 'priv_363cc41795bfba27e478cd199eded0af'
     r = requests.get(url, auth=(password, ''))
     json_data = json.loads(r.text)
     return json_data
