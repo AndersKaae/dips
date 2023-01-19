@@ -2,6 +2,10 @@
     padding-top: 60px;
 }
 
+.countryImage{
+    width: 17px;
+}
+
 @media (min-width: 801px) { 
     #form-container{
         width: 50%;
