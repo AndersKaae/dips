@@ -54,7 +54,8 @@ def LastXDays(NumberOfDays, country):
     formatted_day = formatted_day.strftime("%A, %d %b %Y")
     temp_revenue_per_day.append(formatted_day)
     final_revenue_per_day.append(temp_revenue_per_day)
-    final_revenue_per_day = PopulateDaysWithNoRevenue(final_revenue_per_day, NumberOfDays)
+    if NumberOfDays < 300:
+        final_revenue_per_day = PopulateDaysWithNoRevenue(final_revenue_per_day, NumberOfDays)
     return final_revenue_per_day
 
 def PreviousMonthToDate(endDate):
