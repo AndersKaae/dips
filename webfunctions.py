@@ -25,6 +25,7 @@ def LastYears(NumberofYears, today):
 def LastXDays(NumberOfDays, country):
     temp_revenue_per_day = []
     final_revenue_per_day = []
+    NumberOfDays = NumberOfDays -1
     start_day = str(datetime.today() - timedelta(days=NumberOfDays))[:10]
     latest_day = start_day
     data = PurePeriod(start_day, datetime.today(), country)
@@ -147,19 +148,21 @@ def ParseInvoiceData(json_data):
     aquirer = json_data['transactions'][-1][key]['provider']
     return orderNo, transactionNo, amount, currency, cardType, authTime, fullfillTime, aquirer
 
-
 def PopulateDaysWithNoRevenue(final_revenue_per_day, start_day):
+    sorted_final_revenue_per_day = []
     start_date = datetime.today().date() - timedelta(days=start_day)
-    while start_date != datetime.today().date():
-        found = CheckIfDateExist(start_date, final_revenue_per_day)
-        if found == False:
-            final_revenue_per_day.append([0, start_date.strftime("%A, %d %b %Y")])
-        start_date += timedelta(days=1)           
-    return final_revenue_per_day
+    while start_date != datetime.today().date() + timedelta(days=1):
+        data = CheckIfDateExist(start_date, final_revenue_per_day)
+        if data == None:
+            sorted_final_revenue_per_day.append([0, start_date.strftime("%A, %d %b %Y")])
+        else:
+            sorted_final_revenue_per_day.append(data)
+        start_date += timedelta(days=1)
+    return sorted_final_revenue_per_day
 
 def CheckIfDateExist(start_date, final_revenue_per_day):
-    found = False
+    data = None
     for item in final_revenue_per_day:
         if start_date.strftime("%A, %d %b %Y") == item[1]:
-            found = True
-    return found
+            data = item
+    return data
