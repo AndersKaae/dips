@@ -143,12 +143,17 @@ def ParseInvoiceData(json_data):
     if 'card_transaction' in str(json_data):
         key = 'card_transaction'
         cardType = json_data['transactions'][-1]['card_transaction']['card_type']
+        aquirer = json_data['transactions'][-1][key]['provider']
+    elif 'swish' in str(json_data):
+        key = 'swish_transaction'
+        cardType = 'no_card'
+        aquirer = 'no_aquirer'
     else:
         key = 'mpo_transaction'
         cardType = json_data['transactions'][-1]['mpo_transaction']['transaction_card_type']
+        aquirer = json_data['transactions'][-1][key]['provider']
     authTime = 'not used'
     fullfillTime = datetime.strptime(str(json_data['settled'])[0:10], '%Y-%m-%d')
-    aquirer = json_data['transactions'][-1][key]['provider']
     return orderNo, transactionNo, amount, currency, cardType, authTime, fullfillTime, aquirer
 
 def PopulateDaysWithNoRevenue(final_revenue_per_day, start_day):

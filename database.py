@@ -96,7 +96,8 @@ def insertOrder(orderNo, transactionNo, amount, currency, cardType, authTime, fu
             session.commit()
         except:
             session.rollback()
-        session.close()
+            print('Failed rolling back')
+    session.close()
 
 def GetLastUpdate():
     query = session.query(LastUpdate).first()
