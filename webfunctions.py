@@ -140,7 +140,7 @@ def ParseInvoiceData(json_data):
     transactionNo = orderNo
     amount = ReformatAmount(str(json_data['amount']))
     currency = json_data['currency']
-    if 'card_transaction' in str(json_data):
+    if 'card_transaction' in str(json_data) and not 'swish' in str(json_data):
         key = 'card_transaction'
         cardType = json_data['transactions'][-1]['card_transaction']['card_type']
         aquirer = json_data['transactions'][-1][key]['provider']

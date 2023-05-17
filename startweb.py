@@ -119,7 +119,8 @@ def reepayhook():
 				insertOrder(orderNo, transactionNo, amount, currency, cardType, authTime, fullfillTime, aquirer, country)
 				print('Data updated with webhook')
 				SetLastUpdate(datetime.today().strftime("%d-%m-%Y %H:%M"), False)
-			except:
+			except Exception as e:
+				print(e)
 				print('Failed to parse invoice_no: ' + invoice_no)
 	return "Data recieved"
 
