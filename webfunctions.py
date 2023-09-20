@@ -148,6 +148,10 @@ def ParseInvoiceData(json_data):
         key = 'swish_transaction'
         cardType = 'no_card'
         aquirer = 'no_aquirer'
+    elif 'vipps' in str(json_data):
+        key = 'vipps_transaction'
+        cardType = json_data['transactions'][-1][key]['card_type']
+        aquirer = json_data['transactions'][-1][key]['provider']
     else:
         key = 'mpo_transaction'
         cardType = json_data['transactions'][-1]['mpo_transaction']['transaction_card_type']
