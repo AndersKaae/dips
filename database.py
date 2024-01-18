@@ -4,7 +4,7 @@ from sqlalchemy.orm import sessionmaker
 from decimal import Decimal
 from datetime import datetime, timedelta
 
-engine = create_engine('mysql+pymysql://root:4nrHCngtGYWzLACZeRYt@containers-us-west-80.railway.app:7103/railway')
+engine = create_engine('mysql+pymysql://root:miro12sd@oaktoad.dk/dibs')
 
 Base = declarative_base()
 
