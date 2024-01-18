@@ -125,5 +125,5 @@ def reepayhook():
 	return "Data recieved"
 
 if __name__ == '__main__':
-    app.run(host="localhost", port=8080, debug=True, threaded=True)
+    app.run(host="localhost", port=8282, debug=True, threaded=True)
     app.secret_key = 'super secret key'

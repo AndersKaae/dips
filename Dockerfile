@@ -8,7 +8,7 @@ RUN pip3 install -r requirements.txt
 
 COPY . .
 
-ARG DEFAULT_PORT=8080
+ARG DEFAULT_PORT=8282
 ENV PORT $DEFAULT_PORT
 
 EXPOSE $PORT
