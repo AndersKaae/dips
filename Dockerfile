@@ -13,4 +13,4 @@ ENV PORT $DEFAULT_PORT
 
 EXPOSE $PORT
 
-CMD ["gunicorn","startweb:app"]
+CMD ["gunicorn","-b","0.0.0.0:8282","startweb:app"]
