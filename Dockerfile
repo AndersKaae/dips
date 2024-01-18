@@ -13,4 +13,4 @@ ENV PORT $DEFAULT_PORT
 
 EXPOSE $PORT
 
-CMD ["gunicorn","--workers=2","--threads=2","--log-level debug","-b","0.0.0.0:8282","startweb:app"]
+CMD ["gunicorn","--workers=2","--threads=2","--log-level","debug","-b","0.0.0.0:8282","startweb:app"]
